@@ -87,8 +87,6 @@ def getSignAndTimestamp():
 
         return o
 
-
-
     conn = httplib.HTTPConnection("pan.baidu.com")
     conn.request(method="GET", url='/disk/home', headers=headers)
     response = conn.getresponse()
@@ -157,7 +155,7 @@ def getDlink(fid, sign, timestamp):
 def getRealDownloadUrl(dlink):
     # cflg=65151%3A3,cflg=127%3A3
     conn = httplib.HTTPConnection('d.pcs.baidu.com')
-    conn.request(method="GET", url=dlink , headers=headers)
+    conn.request(method="GET", url=dlink, headers=headers)
     response = conn.getresponse()
 
     print(response.status)
@@ -205,10 +203,10 @@ def getRealDownloadUrl(dlink):
     # }))
 
 
-def download():
+def download(path, filename):
     # fid=getfid("/penkie_sync",'sync.txt')
     # fid=getfid("/ts视频播放器/mac版本",'vlc-2.2.1.dmg')
-    fid = getfid("/游戏素材", '三国杀.rar')
+    fid = getfid(path, filename)
 
     if fid == None:
         print(">>>获取fid出错啦!!")
@@ -237,16 +235,13 @@ def download():
         return
 
 
-# download()
-
-
 # 上传到云盘
-def upload(path,filename):
-    s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+def upload(path, filename):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(("c.pcs.baidu.com", 80))
-    s.sen
+    # s.sen
 
 
-
-
-
+# test
+if __name__ == '__main__':
+    download("/ts视频播放器/mac版本", 'vlc-2.2.1.dmg')
