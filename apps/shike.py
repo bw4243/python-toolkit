@@ -55,8 +55,8 @@ def completeTask():
             conn.close()
 
             if text != '0':
-                print("没抢到")
-                break
+                print("没抢到,库存可能不够,直接下一个")
+                continue
 
             printAppStatus(bundle_id, process_name)
 
@@ -85,8 +85,6 @@ def completeTask():
 
             # 4.模拟下载并打开应用
             fakeDownAndOpenApp(appid, bundle_id, process_name)
-
-            break
 
 
 def xb_online():
@@ -198,9 +196,8 @@ def getUserFinance():
 
 
 if __name__ == '__main__':
-    for i in range(100):
-        completeTask()
-        time.sleep(1)
+    completeTask()
+    time.sleep(1)
 #
 # appid = '953061503'
 # bundid = 'com.koudailicai.R'
