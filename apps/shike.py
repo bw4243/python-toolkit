@@ -34,7 +34,7 @@ def completeTask():
         if app['order_status_disp'] != '0':
             # 可以下载
             xb_online()
-            print(app['search_word'])
+            print(app['search_word'].encode('UTF-8'))
 
             appid = app['appid']
             order_id = app['order_id']
