@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<iframe src="http://d.pcs.baidu.com/file/6033684da1b2df8235d12804e587631b?fid=3289602521-250528-809746274422556&time=1447842595&rt=pr&sign=FDTAERVC-DCb740ccc5511e5e8fedcff06b081203-PHoz6Jk0X0Bi2L%2BbXTCQ1CuY41Y%3D&expires=8h&chkv=1&chkbd=1&chkpc=&dp-logid=7462772765546966159&dp-callid=0&r=388874924"
+        id="pcsdownloadiframe" name="pcsdownloadiframe" style="display:none"></iframe>
+</body>
+
+<script type="text/javascript">
+function base64_encode(str){
+var c1, c2, c3;
+var base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+var i = 0, len= str.length, string = '';
+
+while (i < len){
+c1 = str.charCodeAt(i++) & 0xff;
+if (i == len){
+string += base64EncodeChars.charAt(c1 >> 2);
+string += base64EncodeChars.charAt((c1 & 0x3) << 4);
+string += "==";
+break;
+}
+c2 = str.charCodeAt(i++);
+if (i == len){
+string += base64EncodeChars.charAt(c1 >> 2);
+string += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+string += base64EncodeChars.charAt((c2 & 0xF) << 2);
+string += "=";
+break;
+}
+c3 = str.charCodeAt(i++);
+string += base64EncodeChars.charAt(c1 >> 2);
+string += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+string += base64EncodeChars.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
+string += base64EncodeChars.charAt(c3 & 0x3F)
+}
+return string
+}
+
+
+
+    function s(j, r) {
+    var a = [];
+    var p = [];
+    var o = "";
+    var v = j.length;
+    for (var q = 0; q < 256; q++) {
+        a[q] = j.substr((q % v), 1).charCodeAt(0);
+        p[q] = q
+    }
+    for (var u = q = 0; q < 256; q++) {
+        u = (u + p[q] + a[q]) % 256;
+        var t = p[q];
+        p[q] = p[u];
+        p[u] = t
+    }
+    for (var i = u = q = 0; q < r.length; q++) {
+        i = (i + 1) % 256;
+        u = (u + p[i]) % 256;
+        var t = p[i];
+        p[i] = p[u];
+        p[u] = t;
+        k = p[((p[i] + p[u]) % 256)];
+        o += String.fromCharCode(r.charCodeAt(q) ^ k)
+    }
+
+
+    console.log(p);
+    console.log(a);
+
+    return o
+    }
+
+    var r=s('e8c7d729eea7b54551aa594f942decbe','36a73ac24361200aae7d5e6e5059ab5fcd915c1b');
+    var sign=base64_encode(r);
+    console.log(sign);
+    console.log(r);
+
+</script>
+</html>
