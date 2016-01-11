@@ -27,8 +27,8 @@ user_id = 16973020
 
 
 def sortApplist(list):
-    if len(list) > 1:
-        list.sort(key=lambda x: int(x['order_status_disp']))
+    #if len(list) > 1:
+    #    list.sort(key=lambda x: int(x['order_status_disp']))
 
     return list
 
