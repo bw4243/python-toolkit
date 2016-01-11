@@ -231,12 +231,12 @@ def check_sync():
 
 if __name__ == '__main__':
     # open('sync.txt', 'w').write('1')
-    for i in range(10):
-        if check_sync():
-            completeTask()
-        else:
-            print("doing")
-        time.sleep(3)
+    # for i in range(10):
+    if check_sync():
+        completeTask()
+    else:
+        print("doing")
+        # time.sleep(3)
 #
 # appid = '953061503'
 # bundid = 'com.koudailicai.R'
