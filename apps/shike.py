@@ -203,7 +203,7 @@ def getUserFinance():
 
 if __name__ == '__main__':
     completeTask()
-    time.sleep(1)
+    # time.sleep(1)
 #
 # appid = '953061503'
 # bundid = 'com.koudailicai.R'
@@ -213,4 +213,4 @@ if __name__ == '__main__':
 # xb_online()
 # fakeDownAndOpenApp(appid, bundid, processname)
 #
-getUserFinance()
+# getUserFinance()
