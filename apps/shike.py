@@ -205,7 +205,7 @@ def getUserFinance():
         nowTryIncome = float(obj['try_income'].encode('UTF-8')[:-3])
         if lastTryIncome == 0:
             lastTryIncome = nowTryIncome
-        if lastTryIncome != 0 and nowTryIncome > lastTryIncome:
+        if nowTryIncome > lastTryIncome:
             lastTryIncome = nowTryIncome
             succeed = True
 
