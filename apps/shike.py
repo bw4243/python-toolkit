@@ -139,6 +139,7 @@ def fakeDownAndOpenApp(appid, bundle_id, process_name):
         uploadProcessStatus(bundle_id, process_name)
         global succeed
         if succeed:
+            open('/data/code/python_penkie/apps/sync.txt', 'w').write('0')
             succeed = False
             break
         time.sleep(10)
