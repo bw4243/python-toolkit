@@ -34,7 +34,7 @@ def completeTask():
         if app['order_status_disp'] != '0':
             # 可以下载
             xb_online()
-            #print(app['search_word'])
+            # print(app['search_word'])
 
             appid = app['appid']
             order_id = app['order_id']
@@ -85,6 +85,10 @@ def completeTask():
 
             # 4.模拟下载并打开应用
             fakeDownAndOpenApp(appid, bundle_id, process_name)
+
+            break
+
+
 
 
 def xb_online():
@@ -184,9 +188,11 @@ def getUserFinance():
         str = response.read()
         obj = json.loads(str)
         # print(response.read())
-       # print('今日收入:%s' % obj['today_income'].encode('UTF-8'))
+        # print('今日收入:%s' % obj['today_income'].encode('UTF-8'))
         global lastTryIncome, succeed
-        nowTryIncome = float(obj['try_income'].encode('UTF-8')[:-1])
+        nowTryIncome = float(obj['try_income'].encode('UTF-8')[:-3])
+        if lastTryIncome == 0:
+            lastTryIncome = nowTryIncome
         if lastTryIncome != 0 and nowTryIncome > lastTryIncome:
             lastTryIncome = nowTryIncome
             succeed = True
@@ -207,4 +213,4 @@ if __name__ == '__main__':
 # xb_online()
 # fakeDownAndOpenApp(appid, bundid, processname)
 #
-# getUserFinance()
+getUserFinance()
