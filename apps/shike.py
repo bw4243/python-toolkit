@@ -89,8 +89,6 @@ def completeTask():
             break
 
 
-
-
 def xb_online():
     content = 'user_id=16973020&status=0'
     content = 'p=' + encryptContent(content)
@@ -120,6 +118,9 @@ def json_time(bundle_id, process_name, content):
 
 
 def fakeDownAndOpenApp(appid, bundle_id, process_name):
+    # 更新sync.txt 防止job拥堵
+    open('sync.txt', 'w').write('1')
+
     getUserFinance()
     # 下载中
     content = 'user_id=16973020&idfa=&bs=635443433373543323144464856344344000000000000010000010000000100&cc=340&app=(null),%s,%s,473522972,0,0,0,(null)%s16973020&ver=1.19&type=d_package' % (
@@ -201,9 +202,18 @@ def getUserFinance():
         return json.loads(str)
 
 
+def check_sync():
+    # 检查是否有进行中的任务
+    return open('sync.txt').read() == '0'
+
+
 if __name__ == '__main__':
-    completeTask()
-    # time.sleep(1)
+    # open('sync.txt', 'w').write('1')
+    if check_sync():
+        completeTask()
+    else:
+        print("doing")
+        # time.sleep(1)
 #
 # appid = '953061503'
 # bundid = 'com.koudailicai.R'
