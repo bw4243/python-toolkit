@@ -119,7 +119,7 @@ def json_time(bundle_id, process_name, content):
 
 def fakeDownAndOpenApp(appid, bundle_id, process_name):
     # 更新sync.txt 防止job拥堵
-    open('sync.txt', 'w').write('1')
+    open('/data/code/python_penkie/apps/sync.txt', 'w').write('1')
 
     getUserFinance()
     # 下载中
@@ -204,7 +204,7 @@ def getUserFinance():
 
 def check_sync():
     # 检查是否有进行中的任务
-    return open('sync.txt').read() == '0'
+    return open('/data/code/python_penkie/apps/sync.txt').read().strip() == '0'
 
 
 if __name__ == '__main__':
