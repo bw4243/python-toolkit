@@ -25,19 +25,30 @@ headers = {
 
 user_id = 16973020
 
-
+isEmpty=False
 def sortApplist(list):
-    #if len(list) > 1:
-    #    list.sort(key=lambda x: int(x['order_status_disp']))
+    if len(list) > 1:
+       list.sort(key=lambda x: int(x['order_status_disp']))
 
     return list
 
 
 def completeTask():
     # 1. 获取app列表
-    resp = urllib.urlopen("http://itry.com/shike/getApplist/16973020/CBED9F24D48D24964B7B87BCD6AE8FF4").read()
+    fs = urllib.urlopen("http://itry.com/shike/getApplist/16973020/CBED9F24D48D24964B7B87BCD6AE8FF4")
+    print(fs.code)
+    resp = fs.read()
     print(resp)
-    for app in sortApplist(json.loads(resp)):
+
+    while fs.code != 200:
+        fs = urllib.urlopen("http://itry.com/shike/getApplist/16973020/CBED9F24D48D24964B7B87BCD6AE8FF4")
+        resp = fs.read()
+        print(fs.code)
+        print(resp)
+
+    list=json.loads(resp)
+
+    for app in sortApplist(list):
         if app['order_status_disp'] != '0':
             # 可以下载
             xb_online()
@@ -220,11 +231,12 @@ def check_sync():
 
 if __name__ == '__main__':
     # open('sync.txt', 'w').write('1')
-    if check_sync():
-        completeTask()
-    else:
-        print("doing")
-        # time.sleep(1)
+    for i in range(10):
+        if check_sync():
+            completeTask()
+        else:
+            print("doing")
+        time.sleep(3)
 #
 # appid = '953061503'
 # bundid = 'com.koudailicai.R'
