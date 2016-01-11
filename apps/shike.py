@@ -26,11 +26,18 @@ headers = {
 user_id = 16973020
 
 
+def sortApplist(list):
+    if len(list) > 1:
+        list.sort(key=lambda x: int(x['order_status_disp']))
+
+    return list
+
+
 def completeTask():
     # 1. 获取app列表
     resp = urllib.urlopen("http://itry.com/shike/getApplist/16973020/CBED9F24D48D24964B7B87BCD6AE8FF4").read()
     print(resp)
-    for app in json.loads(resp):
+    for app in sortApplist(json.loads(resp)):
         if app['order_status_disp'] != '0':
             # 可以下载
             xb_online()
@@ -86,7 +93,10 @@ def completeTask():
             # 4.模拟下载并打开应用
             fakeDownAndOpenApp(appid, bundle_id, process_name)
 
-            break
+            # break
+
+    else:
+        open('/data/code/python_penkie/apps/sync.txt', 'w').write('0')
 
 
 def xb_online():
@@ -140,7 +150,6 @@ def fakeDownAndOpenApp(appid, bundle_id, process_name):
         global succeed
         if succeed:
             print("completed!")
-            open('/data/code/python_penkie/apps/sync.txt', 'w').write('0')
             succeed = False
             break
         time.sleep(10)
@@ -226,3 +235,179 @@ if __name__ == '__main__':
 # fakeDownAndOpenApp(appid, bundid, processname)
 #
 # getUserFinance()
+
+
+# str=u"""
+# [{
+# 	"appid": 368677368,
+# 	"name": "优步Uber ---- 全球领先的打车软件",
+# 	"icon": "http://is3.mzstatic.com/image/thumb/Purple7/v4/6a/9d/65/6a9d659f-38bb-defd-3eec-6006c863684a/source/512x512bb.jpg",
+# 	"price": null,
+# 	"version": null,
+# 	"bundle_id": "com.ubercab.UberClient",
+# 	"file_size_bytes": 6.0109019E7,
+# 	"devices": 0,
+# 	"package_name": null,
+# 	"c_time": null,
+# 	"type_name": "旅游",
+# 	"u_time": null,
+# 	"details_url": "/shike/appDetails/368677368/38364/CBED9F24D48D24964B7B87BCD6AE8FF4",
+# 	"order_id": 38364,
+# 	"status": "0",
+# 	"subhead": "前台打开,试玩5分钟",
+# 	"search_word": "专车",
+# 	"down_price": 2.00,
+# 	"ranking": 1,
+# 	"app_desc": null,
+# 	"play_url": null,
+# 	"publisher_wx_gzh": null,
+# 	"order_number": 16000,
+# 	"complete_number": 7673,
+# 	"click_number": 8818,
+# 	"under_number": 16000,
+# 	"e_time": "2016-01-03 22:59:00.0",
+# 	"order_status_disp": "7182",
+# 	"btnStatus_disp": null,
+# 	"leaveStatusPic": "remaining_amount",
+# 	"order_status_disp_play": null,
+# 	"typepicDisp": null,
+# 	"review_money": null,
+# 	"moneyDisp": null,
+# 	"s_time": "2016-01-03 22:06:37.0",
+# 	"shike_id": null,
+# 	"process_name": "UberClient",
+# 	"l_id": 0,
+# 	"r_id": 0,
+# 	"cn": 0,
+# 	"play_banner_path": null
+# }, {
+# 	"appid": 487608658,
+# 	"name": "QQ阅读-小说电子书阅读器",
+# 	"icon": "http://is4.mzstatic.com/image/thumb/Purple69/v4/fd/35/2e/fd352ea1-9238-cabd-288e-4c1d7b3c3c54/source/512x512bb.jpg",
+# 	"price": null,
+# 	"version": null,
+# 	"bundle_id": "com.tencent.qqreaderiphone",
+# 	"file_size_bytes": 3.6476559E7,
+# 	"devices": 0,
+# 	"package_name": null,
+# 	"c_time": null,
+# 	"type_name": "图书",
+# 	"u_time": null,
+# 	"details_url": "/shike/appDetails/487608658/38998/CBED9F24D48D24964B7B87BCD6AE8FF4",
+# 	"order_id": 38998,
+# 	"status": "8",
+# 	"subhead": "前台打开,试玩5分钟",
+# 	"search_word": "芈月传小说",
+# 	"down_price": 2.00,
+# 	"ranking": 2,
+# 	"app_desc": null,
+# 	"play_url": null,
+# 	"publisher_wx_gzh": null,
+# 	"order_number": 1000,
+# 	"complete_number": 951,
+# 	"click_number": 1000,
+# 	"under_number": 1000,
+# 	"e_time": "2016-01-03 23:50:00.0",
+# 	"order_status_disp": "0",
+# 	"btnStatus_disp": null,
+# 	"leaveStatusPic": "remaining_amount",
+# 	"order_status_disp_play": null,
+# 	"typepicDisp": null,
+# 	"review_money": null,
+# 	"moneyDisp": null,
+# 	"s_time": "2016-01-03 19:20:00.0",
+# 	"shike_id": null,
+# 	"process_name": "QQReaderUI",
+# 	"l_id": 0,
+# 	"r_id": 0,
+# 	"cn": 0,
+# 	"play_banner_path": null
+# }, {
+# 	"appid": 923920872,
+# 	"name": "平安好医生-计步赚钱每天6元，全职医生免费看病",
+# 	"icon": "http://is4.mzstatic.com/image/thumb/Purple4/v4/c1/cf/99/c1cf992b-14af-a9bd-1033-b02416dd8c7e/source/512x512bb.jpg",
+# 	"price": null,
+# 	"version": null,
+# 	"bundle_id": "com.pajk.personaldoctor",
+# 	"file_size_bytes": 4.9334504E7,
+# 	"devices": 0,
+# 	"package_name": null,
+# 	"c_time": null,
+# 	"type_name": "医疗",
+# 	"u_time": null,
+# 	"details_url": "/shike/appDetails/923920872/38227/CBED9F24D48D24964B7B87BCD6AE8FF4",
+# 	"order_id": 38227,
+# 	"status": "8",
+# 	"subhead": "前台打开,试玩5分钟",
+# 	"search_word": "计步",
+# 	"down_price": 2.00,
+# 	"ranking": 1,
+# 	"app_desc": null,
+# 	"play_url": null,
+# 	"publisher_wx_gzh": null,
+# 	"order_number": 5000,
+# 	"complete_number": 4809,
+# 	"click_number": 5001,
+# 	"under_number": 5000,
+# 	"e_time": "2016-01-03 23:30:00.0",
+# 	"order_status_disp": "0",
+# 	"btnStatus_disp": null,
+# 	"leaveStatusPic": "remaining_amount",
+# 	"order_status_disp_play": null,
+# 	"typepicDisp": null,
+# 	"review_money": null,
+# 	"moneyDisp": null,
+# 	"s_time": "2016-01-03 20:00:00.0",
+# 	"shike_id": null,
+# 	"process_name": "PAPersonalDoctor",
+# 	"l_id": 0,
+# 	"r_id": 0,
+# 	"cn": 0,
+# 	"play_banner_path": null
+# }, {
+# 	"appid": 486744917,
+# 	"name": "国美在线 - 家电，特卖，热门团购，正品优惠",
+# 	"icon": "http://is3.mzstatic.com/image/thumb/Purple69/v4/cc/05/40/cc0540be-bf73-e6a3-859b-24bf6c69de75/source/512x512bb.jpg",
+# 	"price": null,
+# 	"version": null,
+# 	"bundle_id": "com.gome.gomeEShop",
+# 	"file_size_bytes": 6.2125961E7,
+# 	"devices": 0,
+# 	"package_name": null,
+# 	"c_time": null,
+# 	"type_name": "购物",
+# 	"u_time": null,
+# 	"details_url": "/shike/appDetails/486744917/37656/CBED9F24D48D24964B7B87BCD6AE8FF4",
+# 	"order_id": 37656,
+# 	"status": "8",
+# 	"subhead": "前台打开,试玩5分钟",
+# 	"search_word": "中粮",
+# 	"down_price": 2.00,
+# 	"ranking": 1,
+# 	"app_desc": null,
+# 	"play_url": null,
+# 	"publisher_wx_gzh": null,
+# 	"order_number": 500,
+# 	"complete_number": 78,
+# 	"click_number": 290,
+# 	"under_number": 500,
+# 	"e_time": "2016-01-03 23:30:00.0",
+# 	"order_status_disp": "210",
+# 	"btnStatus_disp": null,
+# 	"leaveStatusPic": "remaining_amount",
+# 	"order_status_disp_play": null,
+# 	"typepicDisp": null,
+# 	"review_money": null,
+# 	"moneyDisp": null,
+# 	"s_time": "2016-01-03 22:00:00.0",
+# 	"shike_id": null,
+# 	"process_name": "GomeEShop",
+# 	"l_id": 0,
+# 	"r_id": 0,
+# 	"cn": 0,
+# 	"play_banner_path": null
+# }]
+# """
+#
+#
+# print(sortApplist(json.loads(str)))
