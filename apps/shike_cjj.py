@@ -150,7 +150,7 @@ def fakeDownAndOpenApp(appid, bundle_id, process_name):
     json_time(bundle_id, process_name, content)
 
     # 下载完成
-    content = 'user_id=16715527&idfa=&bs=F5D545302WJG5NYA3&cc=15&app=382080527,%s,%s,473523166,0,143465,1,2.110.0%s16715527&ver=1.19&type=d_package' % (
+    content = 'user_id=16715527&idfa=&bs=F5D545302WJG5NYA3&cc=15&app=382080529,%s,%s,473523166,0,143465,1,2.110.0%s16715527&ver=1.19&type=d_package' % (
         appid, bundle_id, '%7C%7C')
     content = 'p=' + encryptContent(content, 0)
     json_time(bundle_id, process_name, content)
