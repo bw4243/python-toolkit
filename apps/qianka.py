@@ -1,11 +1,18 @@
 #!/usr/bin/python
 # -*-coding:utf-8-*-
+import os
+import sys
+
+current_path = os.path.split(os.path.realpath(__file__))[0]
+module_path = current_path[:current_path.rfind('/')]
+print(module_path)
+
+sys.path.insert(0, module_path)
 
 import httplib
 import json
 import threading
 import urllib
-import os
 import time
 import datetime
 from pyDes import *
@@ -181,7 +188,8 @@ def completeTask(tasklist):
 
 # setting
 def setting():
-    print(http_retry("http://api.guo7.com/setting.php?app=qk_key_1_16-13&bundleid=com.sws.app&channel=3&idfa=5268855F-AA59-4BFE-B64F-61D04F19DE3C&uuid=15CECF34-57F1-41A9-9740-477DA0A7C95B&version=2.0"))
+    print(http_retry(
+        "http://api.guo7.com/setting.php?app=qk_key_1_16-13&bundleid=com.sws.app&channel=3&idfa=5268855F-AA59-4BFE-B64F-61D04F19DE3C&uuid=15CECF34-57F1-41A9-9740-477DA0A7C95B&version=2.0"))
 
 
 def day_journals():
