@@ -128,7 +128,10 @@ def start_v2(task):
         status = response.status
 
     resp = response.read().decode('unicode-escape')
-    print("start_v2 resp:%s" % resp)
+    try:
+        print("start_v2 resp:%s" % resp)
+    except Exception,e :
+        print(e)
 
     return json.loads(resp)['data']
 
@@ -158,7 +161,10 @@ def uploadAppStatus(adid, adname):
         response = conn.getresponse()
         status = response.status
 
-    print("uploadAppStatus resp:%s" % response.read().decode('unicode-escape'))
+    try:
+        print("uploadAppStatus resp:%s" % response.read().decode('unicode-escape'))
+    except Exception,e :
+        print(e)
 
 
 # 执行任务
