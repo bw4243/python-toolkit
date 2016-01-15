@@ -84,7 +84,7 @@ def fetchTask():
     conn.request(method='GET', url=url, headers=headers)
     response = conn.getresponse()
     status = response.status
-    print("fetch status: %d" % status)
+    print("fetch status: %d  t:%d" % (status,time.time()))
 
     while status != 200:
         print("fetch retry")
