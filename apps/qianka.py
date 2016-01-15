@@ -9,15 +9,8 @@ print(module_path)
 
 sys.path.insert(0, module_path)
 
-import httplib
 import json
-import threading
-import urllib
 import time
-import datetime
-from pyDes import *
-import base64
-import hashlib
 from myutils import *
 
 headers = {
@@ -84,7 +77,7 @@ def fetchTask():
     conn.request(method='GET', url=url, headers=headers)
     response = conn.getresponse()
     status = response.status
-    print("fetch status: %d  t:%d" % (status,time.time()))
+    print("fetch status: %d  t:%d" % (status, time.time()))
 
     while status != 200:
         print("fetch retry")
@@ -334,7 +327,7 @@ def getoneself_info(task_id):
 #
 if __name__ == '__main__':
 
-    while 1:
+    for i in range(29):
         completeTask(fetchTask())
         time.sleep(2)
 
