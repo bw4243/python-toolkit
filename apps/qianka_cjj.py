@@ -99,7 +99,7 @@ def fetchTask():
         if task['type'] == 1 and task['qty'] > 0 and task['status_order'] == 2 and task['status'] == 1:
             availableTasks.append(task)
 
-    print("availableTasks: %s" % str(availableTasks).decode('unicode-escape'))
+    print("availableTasks: %s" % availableTasks)
 
     # 排序
     if len(availableTasks) > 1:
