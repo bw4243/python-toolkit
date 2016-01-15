@@ -3,6 +3,9 @@
 import os
 import sys
 
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
+
 current_path = os.path.split(os.path.realpath(__file__))[0]
 module_path = current_path[:current_path.rfind('/')]
 print(module_path)
