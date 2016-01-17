@@ -177,7 +177,7 @@ def completeTask(tasklist):
     #     setting()
     #     day_journals()
     for task in tasklist:
-        if start_v2(task)['type'] == 1 and start_v2(task)['type'] == 2:
+        if ( start_v2(task)['type'] == 2) or (start_v2(task)['type'] == 1 and start_v2(task)['type'] == 2):
             # succeed
             print("start_v2 ok")
 
