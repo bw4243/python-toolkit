@@ -4,6 +4,16 @@ import time
 from myutils import *
 import config
 
+def home_index():
+    print(http_retry('http://m.qianka.com/api/h5/home/index',headers=headers_from_str("""
+        Host: m.qianka.com
+        Accept: application/json, text/plain, */*
+        Connection: keep-alive
+        Cookie: aliyungf_tc=AQAAAHSRzEQXRwEABoSZtNrgiX1imW0r; gaoshou_session=eyJpdiI6IlFKREpQUkV5WGk2QkVnanNzUldqWXc9PSIsInZhbHVlIjoiakVYK1FtMnRIUlk4SUtzTXFJY0l1Y3FaTEVvZDlUNVVuME9LS0duVlpFaFZkQTFVdEdlcG9TYlNqWE94RzVJM2xiRFhaOWJYUU9iVVlZRDhVMnJ1U0E9PSIsIm1hYyI6ImE0MjZhM2I3N2IwYTQ5ZjBhODMzMWUzMzdiY2VlYjc1Mzc3MTI2MTljNTAzMzViNzU5NTFjMTE4ZDNmNjM2MTcifQ%3D%3D; PHPSESSID=bd7a1528e45d477fac27859f17bed60de9a53c5d; qk:guid=93e8deb0-bd9f-11e5-86c8-bbbea087c08f-20160118; qk_app_id=15
+        User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B440 Safari/600.1.4
+        Accept-Language: zh-cn
+        Referer: http://m.qianka.com/fe/dashboard/index.html?timestamp=1453093214978
+    """)))
 
 def login():
     content = """
@@ -275,4 +285,4 @@ def getoneself_info(task_id):
 if __name__ == '__main__':
     # login()
     # add_user()
-    get_user()
+    home_index()

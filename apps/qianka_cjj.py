@@ -92,7 +92,7 @@ def fetchTask():
     resp = response.read()
     # if type(resp)==type('a'):
     resp = resp.decode('unicode-escape')
-    print("fetchtask:%s" % resp)
+    # print("fetchtask:%s" % resp)
     tasklist = json.loads(resp).get('data',[])
 
     # print("tasklist: %s" % str(tasklist).decode('unicode-escape'))

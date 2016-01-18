@@ -177,16 +177,17 @@ def completeTask(tasklist):
     #     setting()
     #     day_journals()
     for task in tasklist:
-        if start_v2(task)['type']==1 and start_v2(task)['type']==2:
-            # succeed
-            print("start_v2 ok")
+        start_v2(task)
+        start_v2(task)
+        # succeed
+        print("start_v2 ok")
 
-            # getoneself_info
-            task_id = str(task['id'])
-            # getoneself_info(task_id)
+        # getoneself_info
+        task_id = str(task['id'])
+        # getoneself_info(task_id)
 
-            # 上传app下载状态
-            uploadAppStatus(task_id, task['title'])
+        # 上传app下载状态
+        uploadAppStatus(task_id, task['title'])
 
 
 # setting
