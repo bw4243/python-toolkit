@@ -17,7 +17,7 @@ import time
 from myutils import *
 
 headers = {
-    'Cookie': 'PHPSESSID=e246ccea3e2e0743dc7cc4a4dc14b8170496827a; aliyungf_tc=AQAAANzX32ub1QQARBvhepBNCkkjczbG; gaoshou_session=eyJpdiI6IkdTaUpmc0xcLzV3ZXBXU2pudTF2VjJRPT0iLCJ2YWx1ZSI6InczNXdrSGdEVjF3eCtqcDAydnFvXC94emdiQkNGR3FoQU5PR2p3OUxNdVNxakZYdkN1VStmMkZKd1R2S2FPTjJcL0VndzU4ZGVoamo2RmxYWjR5N1RtXC9BPT0iLCJtYWMiOiJhYzIxM2NhNTFlMzVlYjk4YWJmYWFlYjY4MjYwYTNkMGE1YjBjN2ExNDgzYTg5MmI1NjgzOTIxZGVhZDgxMjU4In0%3D; qk_app_id=52; qk_ll=eyJpdiI6Ikx5NjRSZ0lFRDJUOUlJK003ZGxRdHc9PSIsInZhbHVlIjoiYXVIYzlnZG8rdHpFTjdRcVp3bExnUT09IiwibWFjIjoiOWY2YWE4MjAzOGIxYWI2MTM4YjY1MzY5MDBiNWNmOTNmNjMxMmFmNjA2MDQ5YWY0YTlmNDMxNDdlNzJiYTUzZCJ9; qk:guid=62708720-b485-11e5-b105-cdd1f547c2fe-20160106',
+    'Cookie': 'aliyungf_tc=AQAAAHSRzEQXRwEABoSZtNrgiX1imW0r; gaoshou_session=eyJpdiI6IlFKREpQUkV5WGk2QkVnanNzUldqWXc9PSIsInZhbHVlIjoiakVYK1FtMnRIUlk4SUtzTXFJY0l1Y3FaTEVvZDlUNVVuME9LS0duVlpFaFZkQTFVdEdlcG9TYlNqWE94RzVJM2xiRFhaOWJYUU9iVVlZRDhVMnJ1U0E9PSIsIm1hYyI6ImE0MjZhM2I3N2IwYTQ5ZjBhODMzMWUzMzdiY2VlYjc1Mzc3MTI2MTljNTAzMzViNzU5NTFjMTE4ZDNmNjM2MTcifQ%3D%3D; PHPSESSID=bd7a1528e45d477fac27859f17bed60de9a53c5d; qk:guid=93e8deb0-bd9f-11e5-86c8-bbbea087c08f-20160118; qk_app_id=15',
     'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12F70 Safari/600.1.4',
     "Accept": "application/json, text/plain, */*",
     "Accept-Language": 'zh-cn',
@@ -29,13 +29,13 @@ headers = {
 
 # 构建参数
 def params(adid, adname):
-    userid = '32515198'
+    userid = '32836018'
     dict = {
         'adid': adid,
         'adname': adname,
         'check_click': '0',
-        'deviceid': '7E48C310-7260-4E65-AD76-7180422A2214',
-        'dsid': '382080529',
+        'deviceid': 'EF6CA97F-8BDE-4831-B8A3-4843273F924E',
+        'dsid': '382080500',
         'mdt': '474546411',
         'order': userid + adid,
         'rdl': '0',
@@ -132,6 +132,7 @@ def start_v2(task):
         status = response.status
 
     resp = response.read().decode('unicode-escape')
+
     try:
         print("start_v2 resp:%s" % resp)
     except Exception,e :
@@ -146,7 +147,6 @@ def uploadAppStatus(adid, adname):
     conn = httplib.HTTPConnection("gaos.guo7.com")
     _headers = {
         'Accept': '*/*',
-        'Cookie': 'aliyungf_tc=AQAAACCfSzEYdQEAS0Xhevm8qhYtsk0J',
         'User-Agent': 'QiankaKey/2.0 (iPhone; iOS 8.3; Scale/2.00)',
         'Accept-Language': 'zh-Hans;q=1',
         # 'Accept-Encoding': 'gzip, deflate',
@@ -167,7 +167,7 @@ def uploadAppStatus(adid, adname):
 
     try:
         print("uploadAppStatus resp:%s" % response.read().decode('unicode-escape'))
-    except Exception,e :
+    except Exception,e:
         print(e)
 
 
@@ -177,17 +177,16 @@ def completeTask(tasklist):
     #     setting()
     #     day_journals()
     for task in tasklist:
-        start_v2(task)
-        start_v2(task)
-        # succeed
-        print("start_v2 ok")
+        if start_v2(task)['type']==1 and start_v2(task)['type']==2:
+            # succeed
+            print("start_v2 ok")
 
-        # getoneself_info
-        task_id = str(task['id'])
-        # getoneself_info(task_id)
+            # getoneself_info
+            task_id = str(task['id'])
+            # getoneself_info(task_id)
 
-        # 上传app下载状态
-        uploadAppStatus(task_id, task['title'])
+            # 上传app下载状态
+            uploadAppStatus(task_id, task['title'])
 
 
 # setting

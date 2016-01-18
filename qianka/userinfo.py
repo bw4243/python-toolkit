@@ -56,12 +56,10 @@ def login():
 def get_user():
     content = """
         batteryCapacityLeft	61
-        bssid	80:89:17:87:49:92
         bundleid	com.sws.app
         device	iPhone 5s (Global)
-        deviceID	7105089584816
         freeDiskspace	1703
-        idfa	5268855F-AA59-4BFE-B64F-61D04F19DE3C
+        idfa	6A5261DE-BDB3-11E5-9DB6-A45E60C0FD7B
         isBatteryCharging	0
         isBatteryPluggedIn	0
         jailbroken	0
@@ -69,17 +67,13 @@ def get_user():
         localMAC	02:00:00:00:00:00
         model	iPhone 5s (Global)
         networkStatus	5
-        openudid	990781d14810f1f2317fe9f3171a5c323ed937e7
         push	1
         screenBrightness	0.11074148863554
-        ssid	zhouzhipeng
-        system	8.3
         systemOpenTime	1449538706
         systemRunningTime	549.2114206219444
         timestamp	1452957378.853804
         totalDiskspace	12305
-        user_id	32483806
-        uuid	15CECF34-57F1-41A9-9740-477DA0A7C95B
+        uuid	95E77745-BDB3-11E5-A4E5-A45E60C0FD7B
         version	2.0.2015122101
     """
 
@@ -280,5 +274,5 @@ def getoneself_info(task_id):
 
 if __name__ == '__main__':
     # login()
-    add_user()
-    # get_user()
+    # add_user()
+    get_user()
