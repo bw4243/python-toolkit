@@ -92,7 +92,7 @@ def fetchTask():
     resp = response.read()
     # if type(resp)==type('a'):
     resp = resp.decode('unicode-escape')
-    print("fetchtask:%s" % resp)
+    # print("fetchtask:%s" % resp)
     tasklist = json.loads(resp).get('data',[])
 
     # print("tasklist: %s" % str(tasklist).decode('unicode-escape'))
@@ -338,7 +338,8 @@ def getoneself_info(task_id):
 #
 if __name__ == '__main__':
 
-    for i in range(29):
+    # for i in range(29):
+    while 1:
         completeTask(fetchTask())
         time.sleep(2)
 
