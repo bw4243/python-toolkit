@@ -31,13 +31,15 @@ import urllib
 # conn.close()
 
 
-print(json.dumps("abc"))
-print(urllib.quote_plus("sdfsdfsdf://"))
-print(urllib.quote("sdfsdfsdf://"))
+# print(json.dumps("abc"))
+# print(urllib.quote_plus("sdfsdfsdf://"))
+# print(urllib.quote("sdfsdfsdf://"))
+#
+#
+# def abc():
+#     pass
+#
+# fuck-2
+# res = urllib.urlopen("sdf")
 
-
-def abc():
-    pass
-
-fuck-2
-res = urllib.urlopen("sdf")
+from qianka import taskrunner
