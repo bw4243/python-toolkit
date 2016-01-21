@@ -92,8 +92,8 @@ def fetch_task(data):
     print("availableTasks: %s" % availableTasks)
 
     # 排序
-    if len(availableTasks) > 1:
-        availableTasks.sort(key=lambda x: int(x['qty']))
+    # if len(availableTasks) > 1:
+    #     availableTasks.sort(key=lambda x: int(x['qty']))
 
     return availableTasks
 
@@ -127,6 +127,13 @@ def upload_app_status(data):
         # 徒弟贡献值+1
         data['contrib'] += 1
         disciple.inc_contrib(data['userid'])
+    else:
+        i = 0
+        while json.loads(resp)['success'] == 'false' and i < 3:
+            i += 1
+            resp = http_retry(url, headers=_headers)
+            print("uploadAppStatus resp:%s" % resp.decode('unicode-escape'))
+            time.sleep(2)
 
     print("uploadAppStatus resp:%s" % resp.decode('unicode-escape'))
 
@@ -147,42 +154,42 @@ def complete_task(data):
     tasklist = fetch_task(data)
     for task in tasklist:
 
-        if data['contrib'] >= 10: break
+        if data['contrib'] >= 3: break
 
         s1 = start_v2(task, data)
         s2 = start_v2(task, data)
+        #
+        # if s1 == 2 or s2 == 2:
+        # succeed
+        print("start_v2 ok")
 
-        if s1 == 2 or s2 == 2:
-            # succeed
-            print("start_v2 ok")
+        # setting(data['idfa'], data['uuid'])
+        # getoneself_info
+        task_id = str(task['id'])
 
-            # setting(data['idfa'], data['uuid'])
-            # getoneself_info
-            task_id = str(task['id'])
+        info = userinfo.getoneself_info(task_id, data)
 
-            info = userinfo.getoneself_info(task_id, data)
-
-            # 放入数据库,让job去上传app状态
-            data['has_uncompleted'] = 1
-            data['start_time'] = int(time.time())
-            data['wait_seconds'] = int(info['submiao'])
-            data['now_task'] = json.dumps({'id': task_id, 'title': task['title']})
-            disciple.update_task_info(data)
-
-            break
+        # # 放入数据库,让job去上传app状态
+        data['has_uncompleted'] = 1
+        data['start_time'] = int(time.time())
+        data['wait_seconds'] = int(info['submiao'])
+        data['now_task'] = json.dumps({'id': task_id, 'title': task['title']})
+        disciple.update_task_info(data)
+        #
+        break
 
 
-            # 上传app下载状态
-            # upload_app_status(task_id, task['title'], data)
+        # 上传app下载状态
+        # upload_app_status( data)
 
 
 if __name__ == '__main__':
-    # while 1:
-    # 1. 抓取120个徒弟,开始做任务啦
-    for data in disciple.fetch_valid(1):
-        complete_task(data)
+    while 1:
+        # 1. 抓取120个徒弟,开始做任务啦
+        for data in disciple.fetch_valid(100):
+            complete_task(data)
 
-        # time.sleep(2)
+        time.sleep(2)
 
         # test
 

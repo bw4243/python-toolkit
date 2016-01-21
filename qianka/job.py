@@ -10,5 +10,6 @@ if __name__ == '__main__':
         for data in disciple.fetch_will_complete():
             taskrunner.upload_app_status(data)
             data['has_uncompleted'] = 0
+            data['now_task'] =data['now_task'].encode('unicode-escape')
             disciple.update_task_info(data)
         time.sleep(2)

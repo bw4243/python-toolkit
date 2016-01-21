@@ -251,7 +251,7 @@ def params2(contentStr, data={}):
     return urlparam
 
 
-def getoneself_info(task_id,data):
+def getoneself_info(task_id, data):
     content = params2("""
                 batteryCapacityLeft	46
                 bssid	cc:46:d6:26:bc:6f
@@ -279,7 +279,7 @@ def getoneself_info(task_id,data):
                 uuid	%s
                 version	2.0.2015122101
 
-                """ % (data['idfa'],task_id,data['uuid']))
+                """ % (data['idfa'], task_id, data['uuid']))
 
     h = headers_from_str("""
         Content-Type: application/x-www-form-urlencoded
@@ -297,18 +297,21 @@ def getoneself_info(task_id,data):
     return json.loads(resp)
 
 
-
 # 批量生产徒弟
-def batch_gen():
+def batch_gen(no_master=False):
     # 绑定master
     # masters = ['32483806', '32515198']
 
-    masters=['32850888']
+    masters = ['32928545']
     for master_id in masters:
         for i in range(1):
             idfa, uuid, user_id, cookie = reg_get_user()
-            bind_master(cookie, master_id)
-            disciple.new_disciple(idfa, uuid, user_id, cookie,master_id)
+            if not no_master:
+                bind_master(cookie, master_id)
+            else:
+                master_id = '0'
+
+            disciple.new_disciple(idfa, uuid, user_id, cookie, master_id)
 
     print("===================>>>>>>>>>>")
     # print(disciple.fetch_valid())
@@ -353,7 +356,7 @@ def bind_mobile(cookie, mobile, code):
 
 
 def freeze_status(cookie):
-    print(http_retry('http://m.qianka.com/api/h5/clientcenter/freezestatus',headers={'cookie':cookie}))
+    print(http_retry('http://m.qianka.com/api/h5/clientcenter/freezestatus', headers={'cookie': cookie}))
 
 
 if __name__ == '__main__':
@@ -374,6 +377,6 @@ if __name__ == '__main__':
     # voice_code(cookie,'18521058664')
 
 
-    # batch_gen()
+    batch_gen()
 
-    freeze_status('aliyungf_tc=AQAAAFVED2h4YAAABoSZtF/r17TimfGo;  PHPSESSID=156c3f3ae2ca2e6682fa86e3d645f0c5d2828d86; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdoZkFFcWZyTWdhN2VBRm0xZTJOcnc9PSIsInZhbHVlIjoiOWFMWWw1M2QyTzBpdWxQa2g3MkMzZGFLU2dxcDJkMkhxRzBYSUhiMTNtdnp1ZGNvdXhOaVdqSDdXVUJIbFFaK3lHVDl0Qlk0Q1AwenJnaTVVYjVMTGc9PSIsIm1hYyI6IjJmNGM5NzI2ODA3MTliNTAxMmMxYTBkY2JmOGZmNTUwNTZkY2IwZGMwNTA1NjUxNmU4OTM1Zjk3ZWFlODkzOGYifQ%3D%3D; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800; path=/; httponly')
+    # freeze_status('aliyungf_tc=AQAAAFVED2h4YAAABoSZtF/r17TimfGo;  PHPSESSID=156c3f3ae2ca2e6682fa86e3d645f0c5d2828d86; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdoZkFFcWZyTWdhN2VBRm0xZTJOcnc9PSIsInZhbHVlIjoiOWFMWWw1M2QyTzBpdWxQa2g3MkMzZGFLU2dxcDJkMkhxRzBYSUhiMTNtdnp1ZGNvdXhOaVdqSDdXVUJIbFFaK3lHVDl0Qlk0Q1AwenJnaTVVYjVMTGc9PSIsIm1hYyI6IjJmNGM5NzI2ODA3MTliNTAxMmMxYTBkY2JmOGZmNTUwNTZkY2IwZGMwNTA1NjUxNmU4OTM1Zjk3ZWFlODkzOGYifQ%3D%3D; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800; path=/; httponly')
