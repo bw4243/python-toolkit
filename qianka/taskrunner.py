@@ -129,7 +129,7 @@ def upload_app_status(data):
         disciple.inc_contrib(data['userid'])
     else:
         i = 0
-        while json.loads(resp)['success'] == 'false' and i < 3:
+        while json.loads(resp)['success'] == 'false' and i < 2:
             i += 1
             resp = http_retry(url, headers=_headers)
             print("uploadAppStatus resp:%s" % resp.decode('unicode-escape'))
@@ -189,7 +189,7 @@ if __name__ == '__main__':
         for data in disciple.fetch_valid(100):
             complete_task(data)
 
-        time.sleep(2)
+        time.sleep(1)
 
         # test
 
