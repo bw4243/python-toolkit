@@ -251,14 +251,14 @@ def params2(contentStr, data={}):
     return urlparam
 
 
-def getoneself_info(task_id):
+def getoneself_info(task_id,data):
     content = params2("""
                 batteryCapacityLeft	46
                 bssid	cc:46:d6:26:bc:6f
                 bundleid	com.sws.app
                 deviceID	7105089584816
                 freeDiskspace	2230
-                idfa	5268855F-AA59-4BFE-B64F-61D04F19DE3C
+                idfa	%s
                 isBatteryCharging	0
                 isBatteryPluggedIn	0
                 jailbroken	0
@@ -273,13 +273,13 @@ def getoneself_info(task_id):
                 system	8.3
                 systemOpenTime	1449538706
                 systemRunningTime	360.0351954686112
-                task_id	123477
+                task_id	%s
                 timestamp	1452062787.439038
                 totalDiskspace	12305
-                uuid	15CECF34-57F1-41A9-9740-477DA0A7C95B
+                uuid	%s
                 version	2.0.2015122101
 
-                """, data={'task_id': task_id})
+                """ % (data['idfa'],task_id,data['uuid']))
 
     h = headers_from_str("""
         Content-Type: application/x-www-form-urlencoded
@@ -294,20 +294,24 @@ def getoneself_info(task_id):
 
     print('getoneself_info resp:%s' % resp.decode('unicode-escape'))
 
+    return json.loads(resp)
+
+
 
 # 批量生产徒弟
 def batch_gen():
     # 绑定master
-    masters = ['32483806', '32515198']
+    # masters = ['32483806', '32515198']
 
+    masters=['32850888']
     for master_id in masters:
-        for i in range(100):
+        for i in range(1):
             idfa, uuid, user_id, cookie = reg_get_user()
-            disciple.new_disciple(idfa, uuid, user_id, cookie)
             bind_master(cookie, master_id)
+            disciple.new_disciple(idfa, uuid, user_id, cookie,master_id)
 
     print("===================>>>>>>>>>>")
-    print(disciple.fetch_valid())
+    # print(disciple.fetch_valid())
 
 
 def alipay_withdraw(cookie, amount):
@@ -322,16 +326,54 @@ def alipay_withdraw(cookie, amount):
     """ % cookie), body='{"account":"18521058664","realname":"周志鹏","price":%d}' % amount).decode('unicode-escape'))
 
 
+def voice_code(cookie, mobile):
+    print(http_retry('http://m.qianka.com/api/h5/voice/code', method='POST', headers=headers_from_str("""
+        Host: m.qianka.com
+        Accept: application/json, text/plain, */*
+        Accept-Language: zh-cn
+        Content-Type: application/json;charset=UTF-8
+        Origin: http://m.qianka.com
+        Connection: keep-alive
+        User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B440 Safari/600.1.4
+        Cookie: %s
+    """ % cookie), body='{"mobile":%s}' % mobile).decode('unicode-escape'))
+
+
+def bind_mobile(cookie, mobile, code):
+    print(http_retry('http://m.qianka.com/api/h5/user/bindmobile', method='POST', headers=headers_from_str("""
+        Host: m.qianka.com
+        Accept: application/json, text/plain, */*
+        Accept-Language: zh-cn
+        Content-Type: application/json;charset=UTF-8
+        Origin: http://m.qianka.com
+        Connection: keep-alive
+        User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B440 Safari/600.1.4
+        Cookie: %s
+    """ % cookie), body='{"mobile":%s,"code":"%s"}' % (mobile, code)).decode('unicode-escape'))
+
+
+def freeze_status(cookie):
+    print(http_retry('http://m.qianka.com/api/h5/clientcenter/freezestatus',headers={'cookie':cookie}))
+
+
 if __name__ == '__main__':
     # login()
     # add_user()
     # reg_get_user()
     # bind_master()
-    cookie = 'aliyungf_tc=AQAAAHSRzEQXRwEABoSZtNrgiX1imW0r; gaoshou_session=eyJpdiI6IlFKREpQUkV5WGk2QkVnanNzUldqWXc9PSIsInZhbHVlIjoiakVYK1FtMnRIUlk4SUtzTXFJY0l1Y3FaTEVvZDlUNVVuME9LS0duVlpFaFZkQTFVdEdlcG9TYlNqWE94RzVJM2xiRFhaOWJYUU9iVVlZRDhVMnJ1U0E9PSIsIm1hYyI6ImE0MjZhM2I3N2IwYTQ5ZjBhODMzMWUzMzdiY2VlYjc1Mzc3MTI2MTljNTAzMzViNzU5NTFjMTE4ZDNmNjM2MTcifQ%3D%3D; PHPSESSID=bd7a1528e45d477fac27859f17bed60de9a53c5d; qk:guid=93e8deb0-bd9f-11e5-86c8-bbbea087c08f-20160118; qk_app_id=15'
-    home_index(cookie)
-    # login('6A5261DE-BDB3-11E5-9DB6-A45E60C0FD7B','95E77745-BDB3-11E5-A4E5-A45E60C0FD7B','32839361')
-    # print('main')
-    # get_uuid('EF6CA97F-8BDE-4831-B8A3-4843273F924E')
-    alipay_withdraw(cookie, 50)
+    # cookie = 'aliyungf_tc=AQAAAHSRzEQXRwEABoSZtNrgiX1imW0r; gaoshou_session=eyJpdiI6IlFKREpQUkV5WGk2QkVnanNzUldqWXc9PSIsInZhbHVlIjoiakVYK1FtMnRIUlk4SUtzTXFJY0l1Y3FaTEVvZDlUNVVuME9LS0duVlpFaFZkQTFVdEdlcG9TYlNqWE94RzVJM2xiRFhaOWJYUU9iVVlZRDhVMnJ1U0E9PSIsIm1hYyI6ImE0MjZhM2I3N2IwYTQ5ZjBhODMzMWUzMzdiY2VlYjc1Mzc3MTI2MTljNTAzMzViNzU5NTFjMTE4ZDNmNjM2MTcifQ%3D%3D; PHPSESSID=bd7a1528e45d477fac27859f17bed60de9a53c5d; qk:guid=93e8deb0-bd9f-11e5-86c8-bbbea087c08f-20160118; qk_app_id=15'
+    # cookie='aliyungf_tc=AQAAAKCjIzFLdwsABoSZtDJalQR+PiEw;  PHPSESSID=6ea8dfb1f18eb3278498f05752dcdf09d93ef284; expires=Mon, 25-Jan-2016 13:19:19 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6IjF3aFZ2WkZCdVN4em1cLzV1SnpIbmpBPT0iLCJ2YWx1ZSI6IklhbjRsMTlYVFwvWHBlQ0dEbUZBNXRXdVVpbGRKTmZxOVhQdEdxMndvSVJ6QjRoOEdqNmZqRHR2dUlHWTViTWtDZXJGNjl5cGhsTHBPd0ZyNTdpUzhidz09IiwibWFjIjoiZGVhYWIxYmUyZDJmNmNmYzhmODQ0ZWI2NzhjZDQ2MTNjYzU1MmY5YTU0MDZjN2FjN2Q1MDFhODM5YjM2NGYyMSJ9; expires=Mon, 25-Jan-2016 13:19:19 GMT; Max-Age=604800; path=/; httponly'
+    # home_index(cookie)
+    # # login('6A5261DE-BDB3-11E5-9DB6-A45E60C0FD7B','95E77745-BDB3-11E5-A4E5-A45E60C0FD7B','32839361')
+    # # print('main')
+    # # get_uuid('EF6CA97F-8BDE-4831-B8A3-4843273F924E')
+    # alipay_withdraw(cookie, 10)
+    #
+    # home_index(cookie)
 
-    home_index(cookie)
+    # voice_code(cookie,'18521058664')
+
+
+    # batch_gen()
+
+    freeze_status('aliyungf_tc=AQAAAFVED2h4YAAABoSZtF/r17TimfGo;  PHPSESSID=156c3f3ae2ca2e6682fa86e3d645f0c5d2828d86; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdoZkFFcWZyTWdhN2VBRm0xZTJOcnc9PSIsInZhbHVlIjoiOWFMWWw1M2QyTzBpdWxQa2g3MkMzZGFLU2dxcDJkMkhxRzBYSUhiMTNtdnp1ZGNvdXhOaVdqSDdXVUJIbFFaK3lHVDl0Qlk0Q1AwenJnaTVVYjVMTGc9PSIsIm1hYyI6IjJmNGM5NzI2ODA3MTliNTAxMmMxYTBkY2JmOGZmNTUwNTZkY2IwZGMwNTA1NjUxNmU4OTM1Zjk3ZWFlODkzOGYifQ%3D%3D; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800; path=/; httponly')

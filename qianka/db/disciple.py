@@ -3,6 +3,7 @@
 
 import sqlite3
 import os
+import time
 
 
 def __connect_db():
@@ -10,27 +11,57 @@ def __connect_db():
     return sqlite3.connect(current_path + "/qianka.db")
 
 
-def new_disciple(idfa, uuid, userid, cookie):
+def new_disciple(idfa, uuid, userid, cookie, master_id):
     db = __connect_db()
-    db.execute("INSERT INTO disciple(idfa,uuid,userid,cookie) VALUES(?,?,?,?)",
-               [idfa, uuid, userid, cookie])
+    db.execute("INSERT INTO disciple(idfa,uuid,userid,cookie,master_id) VALUES(?,?,?,?,?)",
+               [idfa, uuid, userid, cookie, master_id])
     db.commit()
     db.close()
 
 
 def fetch_valid(count):
     db = __connect_db()
-    cur = db.execute("SELECT idfa,uuid,cookie,userid,contrib FROM disciple WHERE valid=1 LIMIT ?", [count])
-    entries = [dict(idfa=row[0], uuid=row[1], cookie=row[2], userid=row[3], contrib=row[4]) for row in cur.fetchall()]
+    cur = db.execute(
+        "SELECT id,idfa,uuid,cookie,userid,master_id,contrib,valuable,has_uncompleted,start_time,wait_seconds,now_task FROM disciple WHERE valuable=1 AND has_uncompleted=0 LIMIT ? ",
+        [count])
+    entries = [dict(id=row[0], idfa=row[1], uuid=row[2], cookie=row[3], userid=row[4], master_id=row[5], contrib=row[6],
+                    valuable=row[7],
+                    has_uncompleted=row[8], start_time=row[9], wait_seconds=row[10],
+                    now_task=row[11].decode('unicode-escape')) for row in
+               cur.fetchall()]
     db.commit()
     db.close()
 
     return entries
 
 
-def set_invald(userid):
+def fetch_will_complete():
     db = __connect_db()
-    db.execute("UPDATE  disciple SET valid=0 WHERE userid=?", [userid])
+    cur = db.execute(
+        "SELECT id,idfa,uuid,cookie,userid,master_id,contrib,valuable,has_uncompleted,start_time,wait_seconds,now_task FROM disciple WHERE has_uncompleted=1 AND start_time + wait_seconds < ? ",
+        [int(time.time())])
+    entries = [dict(id=row[0], idfa=row[1], uuid=row[2], cookie=row[3], userid=row[4], master_id=row[5], contrib=row[6],
+                    valuable=row[7],
+                    has_uncompleted=row[8], start_time=row[9], wait_seconds=row[10],
+                    now_task=row[11].decode('unicode-escape')) for row in
+               cur.fetchall()]
+    db.commit()
+    db.close()
+
+    return entries
+
+
+def set_invaluable(userid):
+    db = __connect_db()
+    db.execute("UPDATE  disciple SET valuable=0 WHERE userid=?", [userid])
+    db.commit()
+    db.close()
+
+
+def update_task_info(bean):
+    db = __connect_db()
+    db.execute("UPDATE  disciple SET has_uncompleted=?,start_time=?,wait_seconds=?,now_task=? WHERE id=?",
+               [bean['has_uncompleted'], bean['start_time'], bean['wait_seconds'], bean['now_task'], bean['id']])
     db.commit()
     db.close()
 
@@ -38,13 +69,30 @@ def set_invald(userid):
 def inc_contrib(userid):
     db = __connect_db()
     db.execute("UPDATE  disciple SET contrib=contrib+1 WHERE userid=?", [userid])
-    db.execute("UPDATE  disciple SET valid=0 WHERE userid=? AND contrib>=10", [userid])
+    db.execute("UPDATE  disciple SET valuable=0 WHERE userid=? AND contrib>=10", [userid])
     db.commit()
     db.close()
 
 
 if __name__ == '__main__':
-    # new_disciple('sab','sdzzz','123','cookie111')
-    print(fetch_valid(1))
+    # new_disciple('sab2', 'sdzzz2', '1232', 'cookie11122', '12')
+    # print(fetch_valid(2))
     # set_invald('123')
     # inc_contrib('123')
+    # import json
+    #
+    # json.loads('')
+    #
+    # data = fetch_valid(1)
+    # print(data)
+    #
+    # print((data[0]['now_task']))
+
+
+    print(fetch_will_complete())
+
+    # data[0]['has_uncompleted'] = 1
+    # data[0]['start_time'] = int(time.time())
+    # data[0]['wait_seconds']=30
+    # data[0]['now_task'] = json.dumps({'id':'123','title':'我是周知哦那个'})
+    # update_task_info(data[0])
