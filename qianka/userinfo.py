@@ -13,7 +13,7 @@ def bind_master(cookie, master_id):
 
 
 def home_index(cookie):
-    print(http_retry('http://m.qianka.com/api/h5/home/index', headers=headers_from_str("""
+    resp=http_retry('http://m.qianka.com/api/h5/home/index', headers=headers_from_str("""
         Host: m.qianka.com
         Accept: application/json, text/plain, */*
         Connection: keep-alive
@@ -21,7 +21,11 @@ def home_index(cookie):
         User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B440 Safari/600.1.4
         Accept-Language: zh-cn
         Referer: http://m.qianka.com/fe/dashboard/index.html?timestamp=1453093214978
-    """ % cookie)).decode('unicode-escape'))
+    """ % cookie)).decode('unicode-escape')
+    print(resp)
+    return json.loads(resp)['data']
+
+
 
 
 def login(idfa, uuid, userid):
@@ -298,23 +302,19 @@ def getoneself_info(task_id, data):
 
 
 # 批量生产徒弟
-def batch_gen(no_master=False):
+def batch_gen(master_id='0'):
     # 绑定master
-    # masters = ['32483806', '32515198']
+    for i in range(1):
+        idfa, uuid, user_id, cookie = reg_get_user()
+        if master_id != '0':
+            bind_master(cookie, master_id)
 
-    masters = ['32928545']
-    for master_id in masters:
-        for i in range(1):
-            idfa, uuid, user_id, cookie = reg_get_user()
-            if not no_master:
-                bind_master(cookie, master_id)
-            else:
-                master_id = '0'
+        disciple.new_disciple(idfa, uuid, user_id, cookie, master_id)
 
-            disciple.new_disciple(idfa, uuid, user_id, cookie, master_id)
+        print("===================>>>>>>>>>>")
 
-    print("===================>>>>>>>>>>")
-    # print(disciple.fetch_valid())
+
+# print(disciple.fetch_valid())
 
 
 def alipay_withdraw(cookie, amount):
@@ -356,7 +356,14 @@ def bind_mobile(cookie, mobile, code):
 
 
 def freeze_status(cookie):
-    print(http_retry('http://m.qianka.com/api/h5/clientcenter/freezestatus', headers={'cookie': cookie}))
+    resp = http_retry('http://m.qianka.com/api/h5/clientcenter/freezestatus', headers={'cookie': cookie})
+    print(resp)
+    return json.loads(resp)['data']['account_status']
+
+
+def sync_user_status():
+    for d in disciple.fetch_all():
+        disciple.update_account_status(d['id'], freeze_status(d['cookie']),home_index(d['cookie'])['balance'])
 
 
 if __name__ == '__main__':
@@ -365,7 +372,7 @@ if __name__ == '__main__':
     # reg_get_user()
     # bind_master()
     # cookie = 'aliyungf_tc=AQAAAHSRzEQXRwEABoSZtNrgiX1imW0r; gaoshou_session=eyJpdiI6IlFKREpQUkV5WGk2QkVnanNzUldqWXc9PSIsInZhbHVlIjoiakVYK1FtMnRIUlk4SUtzTXFJY0l1Y3FaTEVvZDlUNVVuME9LS0duVlpFaFZkQTFVdEdlcG9TYlNqWE94RzVJM2xiRFhaOWJYUU9iVVlZRDhVMnJ1U0E9PSIsIm1hYyI6ImE0MjZhM2I3N2IwYTQ5ZjBhODMzMWUzMzdiY2VlYjc1Mzc3MTI2MTljNTAzMzViNzU5NTFjMTE4ZDNmNjM2MTcifQ%3D%3D; PHPSESSID=bd7a1528e45d477fac27859f17bed60de9a53c5d; qk:guid=93e8deb0-bd9f-11e5-86c8-bbbea087c08f-20160118; qk_app_id=15'
-    # cookie='aliyungf_tc=AQAAAKCjIzFLdwsABoSZtDJalQR+PiEw;  PHPSESSID=6ea8dfb1f18eb3278498f05752dcdf09d93ef284; expires=Mon, 25-Jan-2016 13:19:19 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6IjF3aFZ2WkZCdVN4em1cLzV1SnpIbmpBPT0iLCJ2YWx1ZSI6IklhbjRsMTlYVFwvWHBlQ0dEbUZBNXRXdVVpbGRKTmZxOVhQdEdxMndvSVJ6QjRoOEdqNmZqRHR2dUlHWTViTWtDZXJGNjl5cGhsTHBPd0ZyNTdpUzhidz09IiwibWFjIjoiZGVhYWIxYmUyZDJmNmNmYzhmODQ0ZWI2NzhjZDQ2MTNjYzU1MmY5YTU0MDZjN2FjN2Q1MDFhODM5YjM2NGYyMSJ9; expires=Mon, 25-Jan-2016 13:19:19 GMT; Max-Age=604800; path=/; httponly'
+    # cookie = 'aliyungf_tc=AQAAAKCjIzFLdwsABoSZtDJalQR+PiEw;  PHPSESSID=6ea8dfb1f18eb3278498f05752dcdf09d93ef284; expires=Mon, 25-Jan-2016 13:19:19 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6IjF3aFZ2WkZCdVN4em1cLzV1SnpIbmpBPT0iLCJ2YWx1ZSI6IklhbjRsMTlYVFwvWHBlQ0dEbUZBNXRXdVVpbGRKTmZxOVhQdEdxMndvSVJ6QjRoOEdqNmZqRHR2dUlHWTViTWtDZXJGNjl5cGhsTHBPd0ZyNTdpUzhidz09IiwibWFjIjoiZGVhYWIxYmUyZDJmNmNmYzhmODQ0ZWI2NzhjZDQ2MTNjYzU1MmY5YTU0MDZjN2FjN2Q1MDFhODM5YjM2NGYyMSJ9; expires=Mon, 25-Jan-2016 13:19:19 GMT; Max-Age=604800; path=/; httponly'
     # home_index(cookie)
     # # login('6A5261DE-BDB3-11E5-9DB6-A45E60C0FD7B','95E77745-BDB3-11E5-A4E5-A45E60C0FD7B','32839361')
     # # print('main')
@@ -377,6 +384,15 @@ if __name__ == '__main__':
     # voice_code(cookie,'18521058664')
 
 
-    batch_gen()
+    # batch_gen()
 
-    # freeze_status('aliyungf_tc=AQAAAFVED2h4YAAABoSZtF/r17TimfGo;  PHPSESSID=156c3f3ae2ca2e6682fa86e3d645f0c5d2828d86; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdoZkFFcWZyTWdhN2VBRm0xZTJOcnc9PSIsInZhbHVlIjoiOWFMWWw1M2QyTzBpdWxQa2g3MkMzZGFLU2dxcDJkMkhxRzBYSUhiMTNtdnp1ZGNvdXhOaVdqSDdXVUJIbFFaK3lHVDl0Qlk0Q1AwenJnaTVVYjVMTGc9PSIsIm1hYyI6IjJmNGM5NzI2ODA3MTliNTAxMmMxYTBkY2JmOGZmNTUwNTZkY2IwZGMwNTA1NjUxNmU4OTM1Zjk3ZWFlODkzOGYifQ%3D%3D; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800; path=/; httponly')
+    # freeze_status(
+    #     'aliyungf_tc=AQAAAFVED2h4YAAABoSZtF/r17TimfGo;  PHPSESSID=156c3f3ae2ca2e6682fa86e3d645f0c5d2828d86; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdoZkFFcWZyTWdhN2VBRm0xZTJOcnc9PSIsInZhbHVlIjoiOWFMWWw1M2QyTzBpdWxQa2g3MkMzZGFLU2dxcDJkMkhxRzBYSUhiMTNtdnp1ZGNvdXhOaVdqSDdXVUJIbFFaK3lHVDl0Qlk0Q1AwenJnaTVVYjVMTGc9PSIsIm1hYyI6IjJmNGM5NzI2ODA3MTliNTAxMmMxYTBkY2JmOGZmNTUwNTZkY2IwZGMwNTA1NjUxNmU4OTM1Zjk3ZWFlODkzOGYifQ%3D%3D; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800; path=/; httponly')
+
+
+    sync_user_status()
+    # batch_gen('32966569')
+
+    # print(login('5268855F-AA59-4BFE-B64F-61D04F19DE3C','15CECF34-57F1-41A9-9740-477DA0A7C95B','32483806'))
+
+

@@ -76,6 +76,7 @@ def setting(idfa, uuid):
 # 抓取任务
 def fetch_task(data):
     headers = __get_header(data['cookie'])
+    headers['Referer']='http://m.qianka.com/fe/task/timed/list_with_queue?timestamp=1453469118673'
     resp = http_retry('http://m.qianka.com/api/h5/subtask/fetch', headers=headers)
 
     # if type(resp)==type('a'):
@@ -154,7 +155,7 @@ def complete_task(data):
     tasklist = fetch_task(data)
     for task in tasklist:
 
-        if data['contrib'] >= 3: break
+        # if data['contrib'] >= 3: break
 
         s1 = start_v2(task, data)
         s2 = start_v2(task, data)

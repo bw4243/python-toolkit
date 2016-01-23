@@ -11,7 +11,9 @@ create table disciple(
     has_uncompleted integer default 0,
     start_time integer default 0,
     wait_seconds integer default 0,
-    now_task text default ''
+    now_task text default '',
+    freeze_status integer  default 0,
+    balance real default 0
 );
 
 CREATE INDEX IX_USERID ON disciple(userid);

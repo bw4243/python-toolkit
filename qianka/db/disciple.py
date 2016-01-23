@@ -35,6 +35,23 @@ def fetch_valid(count):
     return entries
 
 
+def fetch_all():
+    db = __connect_db()
+    cur = db.execute(
+        "SELECT id,idfa,uuid,cookie,userid,master_id,contrib,valuable,has_uncompleted,start_time,wait_seconds,now_task,freeze_status FROM disciple "
+       )
+    entries = [dict(id=row[0], idfa=row[1], uuid=row[2], cookie=row[3], userid=row[4], master_id=row[5], contrib=row[6],
+                    valuable=row[7],
+                    has_uncompleted=row[8], start_time=row[9], wait_seconds=row[10],
+                    now_task=row[11].decode('unicode-escape'), freeze_status=row[12]) for row in
+               cur.fetchall()]
+    db.commit()
+    db.close()
+
+    return entries
+
+
+
 def fetch_will_complete():
     db = __connect_db()
     cur = db.execute(
@@ -69,7 +86,15 @@ def update_task_info(bean):
 def inc_contrib(userid):
     db = __connect_db()
     db.execute("UPDATE  disciple SET contrib=contrib+1 WHERE userid=?", [userid])
-    db.execute("UPDATE  disciple SET valuable=0 WHERE userid=? AND contrib>=3", [userid])
+    db.execute("UPDATE  disciple SET valuable=0 WHERE userid=? AND contrib>=10 AND master_id!=0", [userid])
+    db.commit()
+    db.close()
+
+
+def update_account_status(id, freeze_status,balance):
+    db = __connect_db()
+    db.execute("UPDATE  disciple SET freeze_status=?,balance=? WHERE id=?",
+               [freeze_status,balance, id])
     db.commit()
     db.close()
 
@@ -89,7 +114,10 @@ if __name__ == '__main__':
     # print((data[0]['now_task']))
 
 
-    print(fetch_will_complete())
+    # print(fetch_will_complete())
+
+
+    print(fetch_all())
 
     # data[0]['has_uncompleted'] = 1
     # data[0]['start_time'] = int(time.time())
