@@ -7,7 +7,8 @@ import time
 
 
 def __connect_db():
-    current_path = os.path.split(os.path.realpath(__file__))[0]
+    #current_path = os.path.split(os.path.realpath(__file__))[0]
+    current_path = '/data/dbs'
     return sqlite3.connect(current_path + "/qianka.db")
 
 
