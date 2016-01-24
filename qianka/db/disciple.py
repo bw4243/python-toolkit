@@ -101,6 +101,14 @@ def update_task_info(bean):
     db.close()
 
 
+def update_cookie(bean):
+    db = __connect_db()
+    db.execute("UPDATE  disciple SET cookie=? WHERE id=?",
+               [bean['cookie'], bean['id']])
+    db.commit()
+    db.close()
+
+
 def inc_contrib(userid):
     db = __connect_db()
     db.execute("UPDATE  disciple SET contrib=contrib+1 WHERE userid=?", [userid])
@@ -136,7 +144,9 @@ if __name__ == '__main__':
     # print(fetch_will_complete())
 
 
-    print(fetch_masters())
+    me= fetch_masters()[0]
+    me['cookie']='2'
+    update_cookie(me)
     # print(fetch_masters()[0]['withdraw_realname'])
 
     # data[0]['has_uncompleted'] = 1

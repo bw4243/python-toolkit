@@ -76,13 +76,20 @@ def setting(idfa, uuid):
 # 抓取任务
 def fetch_task(data):
     headers = __get_header(data['cookie'])
-    headers['Referer'] = 'http://m.qianka.com/fe/task/timed/list_with_queue?timestamp=1453469118673'
     resp = http_retry('http://m.qianka.com/api/h5/subtask/fetch', headers=headers)
 
-    # if type(resp)==type('a'):
     resp = resp.decode('unicode-escape')
-    # logger.info(resp)
-    tasklist = json.loads(resp).get('data', [])
+    ret = json.loads(resp)
+
+    if ret['code'] == 401:  # 权限异常
+        data['cookie'] = userinfo.login(data['idfa'], data['uuid'], data['userid'])
+        disciple.update_cookie(data)
+        headers = __get_header(data['cookie'])
+        resp = http_retry('http://m.qianka.com/api/h5/subtask/fetch', headers=headers)
+        resp = resp.decode('unicode-escape')
+        ret = json.loads(resp)
+
+    tasklist = ret.get('data', [])
 
     availableTasks = []
     for task in tasklist:
@@ -159,28 +166,28 @@ def complete_task(data):
         s1 = start_v2(task, data)
         s2 = start_v2(task, data)
         #
-        # if s1 == 2 or s2 == 2:
-        # succeed
-        logger.info("start_v2 ok")
+        if s1 == 2 or s2 == 2:
+            # succeed
+            logger.info("start_v2 ok")
 
-        # setting(data['idfa'], data['uuid'])
-        # getoneself_info
-        task_id = str(task['id'])
+            # setting(data['idfa'], data['uuid'])
+            # getoneself_info
+            task_id = str(task['id'])
 
-        info = userinfo.getoneself_info(task_id, data)
+            info = userinfo.getoneself_info(task_id, data)
 
-        # # 放入数据库,让job去上传app状态
-        data['has_uncompleted'] = 1
-        data['start_time'] = int(time.time())
-        data['wait_seconds'] = int(info['submiao'])
-        data['now_task'] = json.dumps({'id': task_id, 'title': task['title']})
-        disciple.update_task_info(data)
-        #
-        break
+            # # 放入数据库,让job去上传app状态
+            data['has_uncompleted'] = 1
+            data['start_time'] = int(time.time())
+            data['wait_seconds'] = int(info['submiao'])
+            data['now_task'] = json.dumps({'id': task_id, 'title': task['title']})
+            disciple.update_task_info(data)
+            #
+            break
 
 
-        # 上传app下载状态
-        # upload_app_status( data)
+            # 上传app下载状态
+            # upload_app_status( data)
 
 
 # if __name__ == '__main__':
@@ -200,13 +207,6 @@ def run(max_count):
     except:
         logger.exception("taskrunner exception")
 
-        # test
 
-        # while 1:
-        #     complete_task({
-        #                   'cookie': 'aliyungf_tc=AQAAABnMrwx1RgQABoSZtF8IrlKTFD2Y; gaoshou_session=eyJpdiI6Imd6VzczZ0FQVzhXdVZzQkpYZ2orYWc9PSIsInZhbHVlIjoiRk8xRTZ0MDYyVnlybElQNVhhbzJ6NjdJbjFsUU5LK3hzMVJtVHJkTmt2TElTdU5WOFdsMFwvV1RjdEE5bUlWNEFpSE54Q2hZUlk3bE13QVZvMXowQXdnPT0iLCJtYWMiOiIzNzc5ODJmZGM2NGQwMjdjMDhhNWQzNmY2MzA2YzIwZDE0MTIzMzc5M2E0YmE1MTYxMTE4OGM1MGMyYzE5NmI5In0%3D; PHPSESSID=a7ae13340da937d4931e583e9409abc0f5021f47; qk_app_id=13; qk_ll=eyJpdiI6IjdlOU1qRWErVktHZExcL0xRdlhkY293PT0iLCJ2YWx1ZSI6InltemxIN1NuK0FZOE5RZ29Qdm4xWWc9PSIsIm1hYyI6ImZjZmQ0YzY0MmFlOGIzNTI5NDQzNjFhMDRkMmUyNmI5NTFiMzg5NWZmNTk0YTBhOGYwODY0Zjg5ZTBiZmJiYjAifQ%3D%3D; qk:guid=bd86a9c0-b3c0-11e5-8b24-cdc5e0ec6fea-20160105',
-        #                   'idfa': '5268855F-AA59-4BFE-B64F-61D04F19DE3C',
-        #                   'uuid': '15CECF34-57F1-41A9-9740-477DA0A7C95B',
-        #                   'userid': '32483806',
-        #                   'contrib':0})
-        #     time.sleep(1)
+if __name__ == '__main__':
+    fetch_task(disciple.fetch_masters()[0])
