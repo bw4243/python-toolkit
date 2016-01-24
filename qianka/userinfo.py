@@ -22,7 +22,7 @@ def home_index(cookie):
         Accept-Language: zh-cn
         Referer: http://m.qianka.com/fe/dashboard/index.html?timestamp=1453093214978
     """ % cookie)).decode('unicode-escape')
-    logger.info(resp)
+    # logger.info(resp)
     return json.loads(resp)['data']
 
 
@@ -388,7 +388,7 @@ def gen_disciples_for_all():
 
 def prentice_count(cookie):
     resp=http_retry('http://m.qianka.com/api/h5/level/get', headers={'cookie': cookie})
-    logger.info(resp)
+    # logger.info(resp)
     return json.loads(resp)['data']['prentice_count']
 
 
