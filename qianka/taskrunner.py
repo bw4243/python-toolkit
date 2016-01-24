@@ -40,7 +40,7 @@ def params(data):
 
     dict['sign'] = sign
 
-    print('sign', sign)
+    logger.info('sign: %s' % sign)
 
     # 拼装url参数
     urlparam = ''
@@ -51,7 +51,7 @@ def params(data):
 
     urlparam = urlparam[:-1]
 
-    print('urlparam', urlparam)
+    logger.info('urlparam :%s' % urlparam)
 
     return urlparam
 
@@ -68,7 +68,7 @@ def __get_header(cookie):
 
 
 def setting(idfa, uuid):
-    print(http_retry(
+    logger.info(http_retry(
         'http://api.guo7.com/setting.php?app=qk_key_1_16-13&bundleid=com.sws.app&channel=3&idfa=%s&uuid=%s&version=2.0' % (
             idfa, uuid)))
 
@@ -76,12 +76,12 @@ def setting(idfa, uuid):
 # 抓取任务
 def fetch_task(data):
     headers = __get_header(data['cookie'])
-    headers['Referer']='http://m.qianka.com/fe/task/timed/list_with_queue?timestamp=1453469118673'
+    headers['Referer'] = 'http://m.qianka.com/fe/task/timed/list_with_queue?timestamp=1453469118673'
     resp = http_retry('http://m.qianka.com/api/h5/subtask/fetch', headers=headers)
 
     # if type(resp)==type('a'):
     resp = resp.decode('unicode-escape')
-    # print(resp)
+    # logger.info(resp)
     tasklist = json.loads(resp).get('data', [])
 
     availableTasks = []
@@ -90,7 +90,7 @@ def fetch_task(data):
         if task['type'] == 1 and task['qty'] > 0 and task['status_order'] == 2 and task['status'] == 1:
             availableTasks.append(task)
 
-    print("availableTasks: %s" % availableTasks)
+    logger.info("availableTasks: %s" % availableTasks)
 
     # 排序
     # if len(availableTasks) > 1:
@@ -107,7 +107,7 @@ def start_v2(task, data):
                       body='{"task_id":%d}' % task['id'])
 
     resp = resp.decode('unicode-escape')
-    print("start_v2 resp:%s" % resp)
+    logger.info("start_v2 resp:%s" % resp)
     return json.loads(resp)['data']['type']
 
 
@@ -130,17 +130,17 @@ def upload_app_status(data):
         disciple.inc_contrib(data['userid'])
     else:
         i = 0
-        while json.loads(resp)['success'] == 'false' and i < 2:
+        while json.loads(resp)['success'] == 'false' and i < 1:
             i += 1
             resp = http_retry(url, headers=_headers)
-            print("uploadAppStatus resp:%s" % resp.decode('unicode-escape'))
+            logger.info("uploadAppStatus resp:%s" % resp.decode('unicode-escape'))
             time.sleep(2)
 
-    print("uploadAppStatus resp:%s" % resp.decode('unicode-escape'))
+    logger.info("uploadAppStatus resp:%s" % resp.decode('unicode-escape'))
 
 
 def task_detail(cookie, task_id):
-    print(http_retry('http://m.qianka.com/api/h5/subtask/get?task_id=%s' % task_id, headers=headers_from_str("""
+    logger.info(http_retry('http://m.qianka.com/api/h5/subtask/get?task_id=%s' % task_id, headers=headers_from_str("""
         Host: m.qianka.com
         Accept: application/json, text/plain, */*
         Connection: keep-alive
@@ -154,7 +154,6 @@ def task_detail(cookie, task_id):
 def complete_task(data):
     tasklist = fetch_task(data)
     for task in tasklist:
-
         # if data['contrib'] >= 3: break
 
         s1 = start_v2(task, data)
@@ -162,7 +161,7 @@ def complete_task(data):
         #
         # if s1 == 2 or s2 == 2:
         # succeed
-        print("start_v2 ok")
+        logger.info("start_v2 ok")
 
         # setting(data['idfa'], data['uuid'])
         # getoneself_info
@@ -184,21 +183,22 @@ def complete_task(data):
         # upload_app_status( data)
 
 
-if __name__ == '__main__':
-    while 1:
+# if __name__ == '__main__':
+def run(max_count):
+    try:
         # 1. 抓取120个徒弟,开始做任务啦
-        for data in disciple.fetch_valid(100):
+        for data in disciple.fetch_valid(max_count):
             complete_task(data)
 
         # 2. 检查是否有可提交的任务
-        print("----check ------")
+        logger.info("----check ------")
         for data in disciple.fetch_will_complete():
             upload_app_status(data)
             data['has_uncompleted'] = 0
-            data['now_task'] =data['now_task'].encode('unicode-escape')
+            data['now_task'] = data['now_task'].encode('unicode-escape')
             disciple.update_task_info(data)
-
-        time.sleep(1)
+    except:
+        logger.exception("taskrunner exception")
 
         # test
 

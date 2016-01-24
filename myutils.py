@@ -10,10 +10,14 @@ import logging.handlers
 import uuid
 
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 def gen_uuid():
     return str(uuid.uuid1()).upper()
 
-
+logger=None
 # 2. init the logging
 def __init_log():
     LOG_PATH = '/data/logs/qianka/'
@@ -43,8 +47,8 @@ def __init_log():
     # logger.debug('first debug message')
     return logger
 
-
-logger = __init_log()
+if not logger:
+    logger = __init_log()
 
 
 def base64_decode(s):

@@ -5,12 +5,9 @@ from myutils import *
 import json
 from db import disciple
 
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 def bind_master(cookie, master_id):
-    print(http_retry('http://m.qianka.com/api/h5/gift/first', headers={
+    logger.info(http_retry('http://m.qianka.com/api/h5/gift/first', headers={
         'Cookie': cookie,
         'Content-Type': 'application/json;charset=UTF-8'}, method='POST', body='{"master_id":%s}' % master_id))
 
@@ -25,7 +22,7 @@ def home_index(cookie):
         Accept-Language: zh-cn
         Referer: http://m.qianka.com/fe/dashboard/index.html?timestamp=1453093214978
     """ % cookie)).decode('unicode-escape')
-    print(resp)
+    logger.info(resp)
     return json.loads(resp)['data']
 
 
@@ -66,8 +63,8 @@ def login(idfa, uuid, userid):
 
                         """), body=params2(content), return_headers=True)
 
-    print(headers)
-    print(resp)
+    logger.info(headers)
+    logger.info(resp)
 
     # 解析cookie
     cookie = ''
@@ -116,7 +113,7 @@ def reg_get_user():
                         """), body=params2(content), return_headers=True)
     #
     #
-    # print(resp)
+    # logger.info(resp)
     #
     user_id = json.loads(resp)['id']
 
@@ -160,8 +157,8 @@ def get_uuid(idfa):
 
                         """), body=params2(content), return_headers=True)
 
-    print(headers)
-    print(resp)
+    logger.info(headers)
+    logger.info(resp)
 
 
 def day_journals():
@@ -207,7 +204,7 @@ def day_journals():
 
                         """), body=params2(content))
 
-    print('day_journals resp:%s' % resp.decode('unicode-escape'))
+    logger.info('day_journals resp:%s' % resp.decode('unicode-escape'))
 
 
 # getoneself_info 参数获取
@@ -241,7 +238,7 @@ def params2(contentStr, data={}):
     sign = m.hexdigest()
     __dict['sig'] = sign
 
-    print('params2 sign:%s' % sign)
+    logger.info('params2 sign:%s' % sign)
 
     # 拼装url参数
     # urlparam =urllib.urlencode(dict)
@@ -253,7 +250,7 @@ def params2(contentStr, data={}):
 
     urlparam = urlparam[:-1]
 
-    print('params2 urlparam:%s' % urlparam)
+    logger.info('params2 urlparam:%s' % urlparam)
 
     return urlparam
 
@@ -299,7 +296,7 @@ def getoneself_info(task_id, data):
 
     resp = http_retry("http://gaos.guo7.com/zq_api/api/getoneself_info", method='POST', headers=h, body=content)
 
-    print('getoneself_info resp:%s' % resp.decode('unicode-escape'))
+    logger.info('getoneself_info resp:%s' % resp.decode('unicode-escape'))
 
     return json.loads(resp)
 
@@ -315,14 +312,14 @@ def batch_gen(master_id='0',count=1):
         disciple.new_disciple(idfa, uuid, user_id, cookie, master_id)
 
         time.sleep(2)
-        print("===================>>>>>>>>>>")
+        logger.info("===================>>>>>>>>>>")
 
 
-# print(disciple.fetch_valid())
+# logger.info(disciple.fetch_valid())
 
 
 def alipay_withdraw(cookie, amount):
-    print(http_retry('http://m.qianka.com/api/h5/exchange/doalipay', method='POST', headers=headers_from_str("""
+    logger.info(http_retry('http://m.qianka.com/api/h5/exchange/doalipay', method='POST', headers=headers_from_str("""
         Accept: application/json, text/plain, */*
         Accept-Language: zh-cn
         Content-Type: application/json;charset=UTF-8
@@ -334,7 +331,7 @@ def alipay_withdraw(cookie, amount):
 
 
 def weixin_withdraw(cookie,realname, amount):
-    print(http_retry('http://m.qianka.com/api/h5/exchange/dowxpay', method='POST', headers=headers_from_str("""
+    logger.info(http_retry('http://m.qianka.com/api/h5/exchange/dowxpay', method='POST', headers=headers_from_str("""
         Accept: application/json, text/plain, */*
         Accept-Language: zh-cn
         Content-Type: application/json;charset=UTF-8
@@ -346,7 +343,7 @@ def weixin_withdraw(cookie,realname, amount):
 
 
 def voice_code(cookie, mobile):
-    print(http_retry('http://m.qianka.com/api/h5/voice/code', method='POST', headers=headers_from_str("""
+    logger.info(http_retry('http://m.qianka.com/api/h5/voice/code', method='POST', headers=headers_from_str("""
         Host: m.qianka.com
         Accept: application/json, text/plain, */*
         Accept-Language: zh-cn
@@ -359,7 +356,7 @@ def voice_code(cookie, mobile):
 
 
 def bind_mobile(cookie, mobile, code):
-    print(http_retry('http://m.qianka.com/api/h5/user/bindmobile', method='POST', headers=headers_from_str("""
+    logger.info(http_retry('http://m.qianka.com/api/h5/user/bindmobile', method='POST', headers=headers_from_str("""
         Host: m.qianka.com
         Accept: application/json, text/plain, */*
         Accept-Language: zh-cn
@@ -373,7 +370,7 @@ def bind_mobile(cookie, mobile, code):
 
 def freeze_status(cookie):
     resp = http_retry('http://m.qianka.com/api/h5/clientcenter/freezestatus', headers={'cookie': cookie})
-    print(resp)
+    logger.info(resp)
     return json.loads(resp)['data']['account_status']
 
 
@@ -388,6 +385,10 @@ def gen_disciples_for_all():
         batch_gen(master_id= d['userid'],count=2)
 
 if __name__ == '__main__':
+
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
     # login()
     # add_user()
     # reg_get_user()
@@ -396,7 +397,7 @@ if __name__ == '__main__':
     # cookie = 'aliyungf_tc=AQAAAKCjIzFLdwsABoSZtDJalQR+PiEw;  PHPSESSID=6ea8dfb1f18eb3278498f05752dcdf09d93ef284; expires=Mon, 25-Jan-2016 13:19:19 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6IjF3aFZ2WkZCdVN4em1cLzV1SnpIbmpBPT0iLCJ2YWx1ZSI6IklhbjRsMTlYVFwvWHBlQ0dEbUZBNXRXdVVpbGRKTmZxOVhQdEdxMndvSVJ6QjRoOEdqNmZqRHR2dUlHWTViTWtDZXJGNjl5cGhsTHBPd0ZyNTdpUzhidz09IiwibWFjIjoiZGVhYWIxYmUyZDJmNmNmYzhmODQ0ZWI2NzhjZDQ2MTNjYzU1MmY5YTU0MDZjN2FjN2Q1MDFhODM5YjM2NGYyMSJ9; expires=Mon, 25-Jan-2016 13:19:19 GMT; Max-Age=604800; path=/; httponly'
     # home_index(cookie)
     # # login('6A5261DE-BDB3-11E5-9DB6-A45E60C0FD7B','95E77745-BDB3-11E5-A4E5-A45E60C0FD7B','32839361')
-    # # print('main')
+    # # logger.info('main')
     # # get_uuid('EF6CA97F-8BDE-4831-B8A3-4843273F924E')
     # alipay_withdraw(cookie, 10)
     #
@@ -410,8 +411,8 @@ if __name__ == '__main__':
     # freeze_status(
     #     'aliyungf_tc=AQAAAFVED2h4YAAABoSZtF/r17TimfGo;  PHPSESSID=156c3f3ae2ca2e6682fa86e3d645f0c5d2828d86; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdoZkFFcWZyTWdhN2VBRm0xZTJOcnc9PSIsInZhbHVlIjoiOWFMWWw1M2QyTzBpdWxQa2g3MkMzZGFLU2dxcDJkMkhxRzBYSUhiMTNtdnp1ZGNvdXhOaVdqSDdXVUJIbFFaK3lHVDl0Qlk0Q1AwenJnaTVVYjVMTGc9PSIsIm1hYyI6IjJmNGM5NzI2ODA3MTliNTAxMmMxYTBkY2JmOGZmNTUwNTZkY2IwZGMwNTA1NjUxNmU4OTM1Zjk3ZWFlODkzOGYifQ%3D%3D; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800; path=/; httponly')
 
-    # me=disciple.fetch_masters()[0]
-    # weixin_withdraw(me['cookie'],me['withdraw_realname'],10)
+    me=disciple.fetch_masters()[0]
+    weixin_withdraw(me['cookie'],me['withdraw_realname'],10)
 
     sync_user_status()
     # batch_gen('33005806')
@@ -420,6 +421,6 @@ if __name__ == '__main__':
 
     # alipay_withdraw('aliyungf_tc=AQAAAF8zwWOUTgQABoSZtC+qxGVk0/CC;  PHPSESSID=e03e198e26a1e468a393268db4d73813d8126ec7; expires=Thu, 28-Jan-2016 09:04:14 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdEUFdXNTdoOExYc0dmNnFFbUhcL0tRPT0iLCJ2YWx1ZSI6IkVOVVNYXC8zQllXV2tIZ2FCaGRsaThPTUtQanpab0RqM2IzUThpSGpaWHhqNmFpWHRvQ3BYNnNwblZENkhzYWlzaVBjWDBoQnBrZ2xkK1JUbWV2ejFPUT09IiwibWFjIjoiZThlYWI0MzA4ZTgyNDI2NTg2NjAzOTBlMjk2ODAwMmJlYjNhNDc1NzNlOTE1ZjdiMDE1MjBmMGU3OWZjMTU1OSJ9; expires=Thu, 28-Jan-2016 09:04:14 GMT; Max-Age=604800; path=/; httponly',10)
 
-    # print(login('5268855F-AA59-4BFE-B64F-61D04F19DE3C','15CECF34-57F1-41A9-9740-477DA0A7C95B','32483806'))
+    # logger.info(login('5268855F-AA59-4BFE-B64F-61D04F19DE3C','15CECF34-57F1-41A9-9740-477DA0A7C95B','32483806'))
 
 
