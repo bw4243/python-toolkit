@@ -16,7 +16,8 @@ create table disciple(
     balance text default 0,
     today_income text default 0,
     total_income text default 0,
-    withdraw_realname text default ''
+    withdraw_realname text default '',
+    prentice_count integer default 0
 );
 
 CREATE INDEX IX_USERID ON disciple(userid);

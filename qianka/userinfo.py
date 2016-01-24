@@ -377,12 +377,20 @@ def freeze_status(cookie):
 def sync_user_status():
     for d in disciple.fetch_masters():
         data=home_index(d['cookie'])
-        disciple.update_account_status(d['id'], freeze_status(d['cookie']),data['balance'],data['total_income'],data['today_income'])
+        dcount=prentice_count(d['cookie'])
+        disciple.update_account_status(d['id'], freeze_status(d['cookie']),data['balance'],data['total_income'],data['today_income'],dcount)
 
 
 def gen_disciples_for_all():
     for d in disciple.fetch_masters():
         batch_gen(master_id= d['userid'],count=2)
+
+
+def prentice_count(cookie):
+    resp=http_retry('http://m.qianka.com/api/h5/level/get', headers={'cookie': cookie})
+    logger.info(resp)
+    return json.loads(resp)['data']['prentice_count']
+
 
 if __name__ == '__main__':
 
@@ -411,9 +419,10 @@ if __name__ == '__main__':
     # freeze_status(
     #     'aliyungf_tc=AQAAAFVED2h4YAAABoSZtF/r17TimfGo;  PHPSESSID=156c3f3ae2ca2e6682fa86e3d645f0c5d2828d86; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdoZkFFcWZyTWdhN2VBRm0xZTJOcnc9PSIsInZhbHVlIjoiOWFMWWw1M2QyTzBpdWxQa2g3MkMzZGFLU2dxcDJkMkhxRzBYSUhiMTNtdnp1ZGNvdXhOaVdqSDdXVUJIbFFaK3lHVDl0Qlk0Q1AwenJnaTVVYjVMTGc9PSIsIm1hYyI6IjJmNGM5NzI2ODA3MTliNTAxMmMxYTBkY2JmOGZmNTUwNTZkY2IwZGMwNTA1NjUxNmU4OTM1Zjk3ZWFlODkzOGYifQ%3D%3D; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800; path=/; httponly')
 
-    me=disciple.fetch_masters()[0]
-    weixin_withdraw(me['cookie'],me['withdraw_realname'],10)
+    # me=disciple.fetch_masters()[0]
+    # weixin_withdraw(me['cookie'],me['withdraw_realname'],10)
 
+    # print(prentice_count(me['cookie']))
     sync_user_status()
     # batch_gen('33005806')
 
