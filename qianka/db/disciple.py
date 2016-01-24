@@ -86,7 +86,7 @@ def update_task_info(bean):
 def inc_contrib(userid):
     db = __connect_db()
     db.execute("UPDATE  disciple SET contrib=contrib+1 WHERE userid=?", [userid])
-    db.execute("UPDATE  disciple SET valuable=0 WHERE userid=? AND contrib>=10 AND master_id!=0", [userid])
+    db.execute("UPDATE  disciple SET valuable=0 WHERE userid=? AND contrib>=3 AND master_id!=0", [userid])
     db.commit()
     db.close()
 

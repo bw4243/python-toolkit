@@ -391,7 +391,9 @@ if __name__ == '__main__':
 
 
     sync_user_status()
-    # batch_gen('32966569')
+    # batch_gen('33005806')
+
+    # alipay_withdraw('aliyungf_tc=AQAAAF8zwWOUTgQABoSZtC+qxGVk0/CC;  PHPSESSID=e03e198e26a1e468a393268db4d73813d8126ec7; expires=Thu, 28-Jan-2016 09:04:14 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdEUFdXNTdoOExYc0dmNnFFbUhcL0tRPT0iLCJ2YWx1ZSI6IkVOVVNYXC8zQllXV2tIZ2FCaGRsaThPTUtQanpab0RqM2IzUThpSGpaWHhqNmFpWHRvQ3BYNnNwblZENkhzYWlzaVBjWDBoQnBrZ2xkK1JUbWV2ejFPUT09IiwibWFjIjoiZThlYWI0MzA4ZTgyNDI2NTg2NjAzOTBlMjk2ODAwMmJlYjNhNDc1NzNlOTE1ZjdiMDE1MjBmMGU3OWZjMTU1OSJ9; expires=Thu, 28-Jan-2016 09:04:14 GMT; Max-Age=604800; path=/; httponly',10)
 
     # print(login('5268855F-AA59-4BFE-B64F-61D04F19DE3C','15CECF34-57F1-41A9-9740-477DA0A7C95B','32483806'))
 

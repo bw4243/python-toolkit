@@ -71,26 +71,32 @@ def http_retry(url, method='GET', headers={}, body=None, return_headers=False):
     proto, rest = urllib.splittype(url)
     host, rest = urllib.splithost(rest)
 
-    conn = httplib.HTTPConnection(host)
-    conn.request(method=method, url=url, headers=headers, body=body)
-    response = conn.getresponse()
-    status = response.status
-
-    while status != 200:
-        logger.debug("http_retry status:%d" % status)
-        logger.debug("http_retry :%s" % url)
+    try:
         conn = httplib.HTTPConnection(host)
         conn.request(method=method, url=url, headers=headers, body=body)
         response = conn.getresponse()
         status = response.status
 
-    resp = response.read()
-    conn.close()
+        while status != 200:
+            logger.debug("http_retry status:%d" % status)
+            logger.debug("http_retry :%s" % url)
+            conn = httplib.HTTPConnection(host)
+            conn.request(method=method, url=url, headers=headers, body=body)
+            response = conn.getresponse()
+            status = response.status
 
-    if return_headers:
-        return response.getheaders(), resp
+        resp = response.read()
+        conn.close()
 
-    return resp
+        if return_headers:
+            return response.getheaders(), resp
+
+        return resp
+    except:
+        logger.exception("http_retry error")
+        return http_retry(url,method,headers,body,return_headers)
+
+
 
 
 if __name__ == '__main__':
