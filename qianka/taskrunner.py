@@ -190,6 +190,14 @@ if __name__ == '__main__':
         for data in disciple.fetch_valid(100):
             complete_task(data)
 
+        # 2. 检查是否有可提交的任务
+        print("----check ------")
+        for data in disciple.fetch_will_complete():
+            upload_app_status(data)
+            data['has_uncompleted'] = 0
+            data['now_task'] =data['now_task'].encode('unicode-escape')
+            disciple.update_task_info(data)
+
         time.sleep(1)
 
         # test

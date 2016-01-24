@@ -52,6 +52,23 @@ def fetch_all():
 
 
 
+def fetch_masters():
+    db = __connect_db()
+    cur = db.execute(
+        "SELECT id,idfa,uuid,cookie,userid,master_id,contrib,valuable,has_uncompleted,start_time,wait_seconds,now_task,freeze_status,balance,today_income,total_income,withdraw_realname FROM disciple where master_id=0"
+    )
+    entries = [dict(id=row[0], idfa=row[1], uuid=row[2], cookie=row[3], userid=row[4], master_id=row[5], contrib=row[6],
+                    valuable=row[7],
+                    has_uncompleted=row[8], start_time=row[9], wait_seconds=row[10],
+                    now_task=row[11].decode('unicode-escape'), freeze_status=row[12],
+                    balance=row[13],today_income=row[14],total_income=row[15],withdraw_realname=row[16].encode('utf-8')) for row in
+               cur.fetchall()]
+    db.commit()
+    db.close()
+
+    return entries
+
+
 def fetch_will_complete():
     db = __connect_db()
     cur = db.execute(
@@ -91,10 +108,10 @@ def inc_contrib(userid):
     db.close()
 
 
-def update_account_status(id, freeze_status,balance):
+def update_account_status(id, freeze_status,balance,total_income,today_income):
     db = __connect_db()
-    db.execute("UPDATE  disciple SET freeze_status=?,balance=? WHERE id=?",
-               [freeze_status,balance, id])
+    db.execute("UPDATE  disciple SET freeze_status=?,balance=?,total_income=?,today_income=? WHERE id=?",
+               [freeze_status,balance,total_income,today_income, id])
     db.commit()
     db.close()
 
@@ -117,7 +134,7 @@ if __name__ == '__main__':
     # print(fetch_will_complete())
 
 
-    print(fetch_all())
+    print(fetch_masters()[0]['withdraw_realname'])
 
     # data[0]['has_uncompleted'] = 1
     # data[0]['start_time'] = int(time.time())

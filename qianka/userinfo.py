@@ -5,6 +5,9 @@ from myutils import *
 import json
 from db import disciple
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 def bind_master(cookie, master_id):
     print(http_retry('http://m.qianka.com/api/h5/gift/first', headers={
@@ -302,15 +305,16 @@ def getoneself_info(task_id, data):
 
 
 # 批量生产徒弟
-def batch_gen(master_id='0'):
+def batch_gen(master_id='0',count=1):
     # 绑定master
-    for i in range(1):
+    for i in range(count):
         idfa, uuid, user_id, cookie = reg_get_user()
         if master_id != '0':
             bind_master(cookie, master_id)
 
         disciple.new_disciple(idfa, uuid, user_id, cookie, master_id)
 
+        time.sleep(2)
         print("===================>>>>>>>>>>")
 
 
@@ -327,6 +331,18 @@ def alipay_withdraw(cookie, amount):
         User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12F70 Safari/600.1.4
         Cookie: %s
     """ % cookie), body='{"account":"18521058664","realname":"周志鹏","price":%d}' % amount).decode('unicode-escape'))
+
+
+def weixin_withdraw(cookie,realname, amount):
+    print(http_retry('http://m.qianka.com/api/h5/exchange/dowxpay', method='POST', headers=headers_from_str("""
+        Accept: application/json, text/plain, */*
+        Accept-Language: zh-cn
+        Content-Type: application/json;charset=UTF-8
+        Origin: http://m.qianka.com
+        Connection: keep-alive
+        User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12F70 Safari/600.1.4
+        Cookie: %s
+    """ % cookie), body='{"realname":"%s","price":%d}' % (realname,amount)).decode('unicode-escape'))
 
 
 def voice_code(cookie, mobile):
@@ -362,9 +378,14 @@ def freeze_status(cookie):
 
 
 def sync_user_status():
-    for d in disciple.fetch_all():
-        disciple.update_account_status(d['id'], freeze_status(d['cookie']),home_index(d['cookie'])['balance'])
+    for d in disciple.fetch_masters():
+        data=home_index(d['cookie'])
+        disciple.update_account_status(d['id'], freeze_status(d['cookie']),data['balance'],data['total_income'],data['today_income'])
 
+
+def gen_disciples_for_all():
+    for d in disciple.fetch_masters():
+        batch_gen(master_id= d['userid'],count=2)
 
 if __name__ == '__main__':
     # login()
@@ -389,9 +410,13 @@ if __name__ == '__main__':
     # freeze_status(
     #     'aliyungf_tc=AQAAAFVED2h4YAAABoSZtF/r17TimfGo;  PHPSESSID=156c3f3ae2ca2e6682fa86e3d645f0c5d2828d86; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdoZkFFcWZyTWdhN2VBRm0xZTJOcnc9PSIsInZhbHVlIjoiOWFMWWw1M2QyTzBpdWxQa2g3MkMzZGFLU2dxcDJkMkhxRzBYSUhiMTNtdnp1ZGNvdXhOaVdqSDdXVUJIbFFaK3lHVDl0Qlk0Q1AwenJnaTVVYjVMTGc9PSIsIm1hYyI6IjJmNGM5NzI2ODA3MTliNTAxMmMxYTBkY2JmOGZmNTUwNTZkY2IwZGMwNTA1NjUxNmU4OTM1Zjk3ZWFlODkzOGYifQ%3D%3D; expires=Mon, 25-Jan-2016 13:20:20 GMT; Max-Age=604800; path=/; httponly')
 
+    # me=disciple.fetch_masters()[0]
+    # weixin_withdraw(me['cookie'],me['withdraw_realname'],10)
 
     sync_user_status()
     # batch_gen('33005806')
+
+    # gen_disciples_for_all()
 
     # alipay_withdraw('aliyungf_tc=AQAAAF8zwWOUTgQABoSZtC+qxGVk0/CC;  PHPSESSID=e03e198e26a1e468a393268db4d73813d8126ec7; expires=Thu, 28-Jan-2016 09:04:14 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdEUFdXNTdoOExYc0dmNnFFbUhcL0tRPT0iLCJ2YWx1ZSI6IkVOVVNYXC8zQllXV2tIZ2FCaGRsaThPTUtQanpab0RqM2IzUThpSGpaWHhqNmFpWHRvQ3BYNnNwblZENkhzYWlzaVBjWDBoQnBrZ2xkK1JUbWV2ejFPUT09IiwibWFjIjoiZThlYWI0MzA4ZTgyNDI2NTg2NjAzOTBlMjk2ODAwMmJlYjNhNDc1NzNlOTE1ZjdiMDE1MjBmMGU3OWZjMTU1OSJ9; expires=Thu, 28-Jan-2016 09:04:14 GMT; Max-Age=604800; path=/; httponly',10)
 
