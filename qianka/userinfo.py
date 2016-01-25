@@ -13,7 +13,7 @@ def bind_master(cookie, master_id):
 
 
 def home_index(cookie):
-    resp=http_retry('http://m.qianka.com/api/h5/home/index', headers=headers_from_str("""
+    resp = http_retry('http://m.qianka.com/api/h5/home/index', headers=headers_from_str("""
         Host: m.qianka.com
         Accept: application/json, text/plain, */*
         Connection: keep-alive
@@ -24,8 +24,6 @@ def home_index(cookie):
     """ % cookie)).decode('unicode-escape')
     # logger.info(resp)
     return json.loads(resp)['data']
-
-
 
 
 def login(idfa, uuid, userid):
@@ -302,7 +300,7 @@ def getoneself_info(task_id, data):
 
 
 # 批量生产徒弟
-def batch_gen(master_id='0',count=1):
+def batch_gen(master_id='0', count=1):
     # 绑定master
     for i in range(count):
         idfa, uuid, user_id, cookie = reg_get_user()
@@ -330,8 +328,8 @@ def alipay_withdraw(cookie, amount):
     """ % cookie), body='{"account":"18521058664","realname":"周志鹏","price":%d}' % amount).decode('unicode-escape'))
 
 
-def weixin_withdraw(cookie,realname, amount):
-    resp=http_retry('http://m.qianka.com/api/h5/exchange/dowxpay', method='POST', headers=headers_from_str("""
+def weixin_withdraw(cookie, realname, amount):
+    resp = http_retry('http://m.qianka.com/api/h5/exchange/dowxpay', method='POST', headers=headers_from_str("""
         Accept: application/json, text/plain, */*
         Accept-Language: zh-cn
         Content-Type: application/json;charset=UTF-8
@@ -339,7 +337,7 @@ def weixin_withdraw(cookie,realname, amount):
         Connection: keep-alive
         User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12F70 Safari/600.1.4
         Cookie: %s
-    """ % cookie), body='{"realname":"%s","price":%d}' % (realname,amount)).decode('unicode-escape')
+    """ % cookie), body='{"realname":"%s","price":%d}' % (realname, amount)).decode('unicode-escape')
     logger.info(resp)
 
     return resp
@@ -379,25 +377,33 @@ def freeze_status(cookie):
 
 def sync_user_status():
     for d in disciple.fetch_masters():
-        data=home_index(d['cookie'])
-        dcount=prentice_count(d['cookie'])
-        disciple.update_account_status(d['id'], freeze_status(d['cookie']),data['balance'],data['total_income'],data['today_income'],dcount)
+        data = home_index(d['cookie'])
+        dcount = prentice_count(d['cookie'])
+        disciple.update_account_status(d['id'], freeze_status(d['cookie']), data['balance'], data['total_income'],
+                                       data['today_income'], dcount)
+
+
+def sync_one_status(d):
+    data = home_index(d['cookie'])
+    dcount = prentice_count(d['cookie'])
+    disciple.update_account_status(d['id'], freeze_status(d['cookie']), data['balance'], data['total_income'],
+                                   data['today_income'], dcount)
 
 
 def gen_disciples_for_all():
     for d in disciple.fetch_masters():
-        batch_gen(master_id= d['userid'],count=2)
+        batch_gen(master_id=d['userid'], count=2)
 
 
 def prentice_count(cookie):
-    resp=http_retry('http://m.qianka.com/api/h5/level/get', headers={'cookie': cookie})
+    resp = http_retry('http://m.qianka.com/api/h5/level/get', headers={'cookie': cookie})
     # logger.info(resp)
     return json.loads(resp)['data']['prentice_count']
 
 
 if __name__ == '__main__':
-
     import sys
+
     reload(sys)
     sys.setdefaultencoding('utf-8')
     # login()
@@ -434,5 +440,3 @@ if __name__ == '__main__':
     # alipay_withdraw('aliyungf_tc=AQAAAF8zwWOUTgQABoSZtC+qxGVk0/CC;  PHPSESSID=e03e198e26a1e468a393268db4d73813d8126ec7; expires=Thu, 28-Jan-2016 09:04:14 GMT; Max-Age=604800;  gaoshou_session=eyJpdiI6ImdEUFdXNTdoOExYc0dmNnFFbUhcL0tRPT0iLCJ2YWx1ZSI6IkVOVVNYXC8zQllXV2tIZ2FCaGRsaThPTUtQanpab0RqM2IzUThpSGpaWHhqNmFpWHRvQ3BYNnNwblZENkhzYWlzaVBjWDBoQnBrZ2xkK1JUbWV2ejFPUT09IiwibWFjIjoiZThlYWI0MzA4ZTgyNDI2NTg2NjAzOTBlMjk2ODAwMmJlYjNhNDc1NzNlOTE1ZjdiMDE1MjBmMGU3OWZjMTU1OSJ9; expires=Thu, 28-Jan-2016 09:04:14 GMT; Max-Age=604800; path=/; httponly',10)
 
     # logger.info(login('5268855F-AA59-4BFE-B64F-61D04F19DE3C','15CECF34-57F1-41A9-9740-477DA0A7C95B','32483806'))
-
-
