@@ -396,9 +396,9 @@ def gen_disciples_for_all():
 
 
 def prentice_count(cookie):
-    resp = http_retry('http://m.qianka.com/api/h5/level/get', headers={'cookie': cookie})
+    resp = http_retry('http://m.qianka.com/api/h5/prentice/index', headers={'cookie': cookie})
     # logger.info(resp)
-    return json.loads(resp)['data']['prentice_count']
+    return json.loads(resp)['data']['today_prentice_count']
 
 
 if __name__ == '__main__':
