@@ -5,41 +5,15 @@ import httplib
 import time
 import json
 import urllib
+from myutils import *
 
-# headers = {
-#     "Cookie": "PHPSESSID=0eb0m60mrp8ci21hk4q0jqp9c2",
-#     "Content-Type": "application/x-www-form-urlencoded",
-# }
-# # for k in range(100):
-# #     for i in range(1, 9):
-# #         time.sleep(0.2)
-#
-# url = 'http://sobear.elomo.com/WebAPP/index.php/Home/Answer/deal_res'
-# conn = httplib.HTTPConnection("sobear.elomo.com")
-#
-# body = 'rank=3&score=%d&num=10' % 1
-#
-# headers['Content-Length'] = len(body)
-#
-# conn.request(method='POST', url=url, headers=headers, body=body)
-#
-# response = conn.getresponse()
-#
-# print(response.status)
-# print(response.read())
-#
-# conn.close()
+list = json.loads(http_retry('http://meta.open.dp/metadata/city/all').encode('utf-8'))
+map = {}
+for city in list:
+    map[city['cityName']] = city['cityID']
 
+cityids = ''
+for cityname in u'南昌,上海,北京,杭州,广州,南京,苏州,深圳,成都,重庆,天津,宁波,无锡,厦门,武汉,西安,沈阳,大连,青岛,济南,石家庄,哈尔滨,合肥,郑州,长沙'.split(','):
+    cityids += str(map[cityname]) + ','
 
-# print(json.dumps("abc"))
-# print(urllib.quote_plus("sdfsdfsdf://"))
-# print(urllib.quote("sdfsdfsdf://"))
-#
-#
-# def abc():
-#     pass
-#
-# fuck-2
-# res = urllib.urlopen("sdf")
-
-from qianka import taskrunner
+print(cityids)

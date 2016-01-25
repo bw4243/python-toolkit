@@ -375,6 +375,11 @@ def freeze_status(cookie):
     return json.loads(resp)['data']['account_status']
 
 
+def unbind_weixin(cookie):
+    resp = http_retry('http://m.qianka.com/api/h5/user/unbindwx', headers={'cookie': cookie})
+    logger.info(resp)
+
+
 def sync_user_status():
     for d in disciple.fetch_masters():
         data = home_index(d['cookie'])
