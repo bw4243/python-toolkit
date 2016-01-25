@@ -331,7 +331,7 @@ def alipay_withdraw(cookie, amount):
 
 
 def weixin_withdraw(cookie,realname, amount):
-    logger.info(http_retry('http://m.qianka.com/api/h5/exchange/dowxpay', method='POST', headers=headers_from_str("""
+    resp=http_retry('http://m.qianka.com/api/h5/exchange/dowxpay', method='POST', headers=headers_from_str("""
         Accept: application/json, text/plain, */*
         Accept-Language: zh-cn
         Content-Type: application/json;charset=UTF-8
@@ -339,7 +339,10 @@ def weixin_withdraw(cookie,realname, amount):
         Connection: keep-alive
         User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12F70 Safari/600.1.4
         Cookie: %s
-    """ % cookie), body='{"realname":"%s","price":%d}' % (realname,amount)).decode('unicode-escape'))
+    """ % cookie), body='{"realname":"%s","price":%d}' % (realname,amount)).decode('unicode-escape')
+    logger.info(resp)
+
+    return resp
 
 
 def voice_code(cookie, mobile):
