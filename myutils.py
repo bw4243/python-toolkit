@@ -8,16 +8,20 @@ import os
 import logging
 import logging.handlers
 import uuid
-
-
+import os
 import sys
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
 
 def gen_uuid():
     return str(uuid.uuid1()).upper()
 
-logger=None
+
+logger = None
+
+
 # 2. init the logging
 def __init_log():
     LOG_PATH = '/data/logs/qianka/'
@@ -26,10 +30,14 @@ def __init_log():
     if not os.path.exists(LOG_PATH):
         os.system('mkdir -p %s' % LOG_PATH)
 
+    file = LOG_PATH + LOG_FILE
+
+    os.system('chmod 666 %s' % file)
+
     fmt = '%(asctime)s %(filename)s:%(lineno)s [%(levelname)s] - %(message)s'
     formatter = logging.Formatter(fmt)  # 实例化formatter
 
-    handler = logging.handlers.TimedRotatingFileHandler(LOG_PATH + LOG_FILE, when='midnight',
+    handler = logging.handlers.TimedRotatingFileHandler(file, when='midnight',
                                                         encoding='UTF-8')  # 实例化handler
     handler.setFormatter(formatter)  # 为handler添加formatter
     handler.suffix = '%Y-%m-%d'
@@ -46,6 +54,7 @@ def __init_log():
     # logger.info('first info message')
     # logger.debug('first debug message')
     return logger
+
 
 if not logger:
     logger = __init_log()
@@ -98,9 +107,7 @@ def http_retry(url, method='GET', headers={}, body=None, return_headers=False):
         return resp
     except:
         logger.exception("http_retry error")
-        return http_retry(url,method,headers,body,return_headers)
-
-
+        return http_retry(url, method, headers, body, return_headers)
 
 
 if __name__ == '__main__':
