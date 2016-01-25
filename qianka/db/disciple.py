@@ -69,6 +69,22 @@ def fetch_masters():
 
     return entries
 
+def fetch_by_userid(userid):
+    db = __connect_db()
+    cur = db.execute(
+        "SELECT id,idfa,uuid,cookie,userid,master_id,contrib,valuable,has_uncompleted,start_time,wait_seconds,now_task,freeze_status,balance,today_income,total_income,withdraw_realname,prentice_count FROM disciple WHERE userid=?",[userid]
+    )
+    entries = [dict(id=row[0], idfa=row[1], uuid=row[2], cookie=row[3], userid=row[4], master_id=row[5], contrib=row[6],
+                    valuable=row[7],
+                    has_uncompleted=row[8], start_time=row[9], wait_seconds=row[10],
+                    now_task=row[11].decode('unicode-escape'), freeze_status=row[12],
+                    balance=row[13], today_income=row[14], total_income=row[15],
+                    withdraw_realname=row[16].encode('utf-8'), prentice_count=row[17]) for row in
+               cur.fetchall()]
+    db.commit()
+    db.close()
+
+    return entries
 
 def fetch_will_complete():
     db = __connect_db()
@@ -144,9 +160,11 @@ if __name__ == '__main__':
     # print(fetch_will_complete())
 
 
-    me= fetch_masters()[0]
-    me['cookie']='2'
-    update_cookie(me)
+    # me= fetch_masters()[0]
+    # me['cookie']='2'
+    # update_cookie(me)
+
+    print(fetch_by_userid('32966569'))
     # print(fetch_masters()[0]['withdraw_realname'])
 
     # data[0]['has_uncompleted'] = 1
