@@ -19,9 +19,10 @@ if __name__ == '__main__':
     from qianka import taskrunner,userinfo
 
     # logic
-    for i in range(15):
+    # for i in range(15):
+    while 1:
         taskrunner.run(100)
         time.sleep(2)
 
     # refresh
-    userinfo.sync_user_status()
+    # userinfo.sync_user_status()

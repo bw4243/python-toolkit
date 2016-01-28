@@ -12,8 +12,10 @@ import time
 
 if __name__ == '__main__':
     while 1:
-        for data in disciple.fetch_masters():
-            amount = 100
-            if float(data['balance']) >= amount:
-                userinfo.weixin_withdraw(data['cookie'], data['withdraw_realname'], amount)
+
+        data = disciple.fetch_by_userid('33005806')[0]
+        userinfo.sync_one_status(data)
+        amount = 100
+        if float(data['balance']) >= amount:
+            userinfo.weixin_withdraw(data['cookie'], data['withdraw_realname'], amount)
         time.sleep(3)

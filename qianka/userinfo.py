@@ -22,7 +22,7 @@ def home_index(cookie):
         Accept-Language: zh-cn
         Referer: http://m.qianka.com/fe/dashboard/index.html?timestamp=1453093214978
     """ % cookie)).decode('unicode-escape')
-    # logger.info(resp)
+    logger.info(resp)
     return json.loads(resp)['data']
 
 
@@ -81,6 +81,7 @@ def reg_get_user():
         batteryCapacityLeft	61
         bundleid	com.sws.app
         device	iPhone 5s (Global)
+        deviceID	7105089584811
         freeDiskspace	1703
         idfa	%s
         isBatteryCharging	0
@@ -99,6 +100,7 @@ def reg_get_user():
         uuid	%s
         version	2.0.2015122101
     """ % (idfa, uuid)
+
 
     headers, resp = http_retry('http://gaos.guo7.com/zq_api/api/get_user', method='POST',
                                headers=headers_from_str("""

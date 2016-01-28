@@ -18,8 +18,8 @@ def params(data):
         'adname': adname,
         'check_click': '0',
         'deviceid': data['idfa'],
-        'dsid': '382080527',
-        'mdt': '474546411',
+        'dsid': '482080528',
+        'mdt': '374546411',
         'order': userid + adid,
         'rdl': '0',
         'time': '%d' % (int(time.time())),
@@ -204,6 +204,8 @@ def run(max_count):
             data['has_uncompleted'] = 0
             data['now_task'] = data['now_task'].encode('unicode-escape')
             disciple.update_task_info(data)
+
+            userinfo.sync_one_status(data)
     except:
         logger.exception("taskrunner exception")
 

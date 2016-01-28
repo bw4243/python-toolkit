@@ -16,7 +16,7 @@ sys.setdefaultencoding('utf-8')
 
 
 def gen_uuid():
-    return str(uuid.uuid1()).upper()
+    return str(uuid.uuid4()).upper()
 
 
 logger = None
