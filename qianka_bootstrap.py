@@ -21,7 +21,7 @@ if __name__ == '__main__':
     # logic
     # for i in range(15):
     while 1:
-        taskrunner.run(100)
+        taskrunner.run(1)
         time.sleep(2)
 
     # refresh

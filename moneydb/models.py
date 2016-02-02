@@ -1,62 +1,65 @@
 #!/usr/bin/python
 # -*-coding:utf-8-*-
 
-from sqlalchemy import Column, String, Integer
-from db import Base
+from sqlalchemy import Column, String, Integer, DateTime, Boolean, Float
+from db import Base, engine
+from myutils import *
 
 
-# 定义QiankaUser对象:
-class QiankaUser(Base):
+# 定义CommonUser对象:
+class User(Base):
     # 表的名字:
-    __tablename__ = 'QiankaUser'
+    __tablename__ = 'User'
 
     # 表的结构:
     id = Column(Integer, primary_key=True, autoincrement=True)
-    idfa = Column(String)
-    uuid = Column(String)
+    user_id = Column(String, unique=True)
+    nick_name = Column(String)
+    app_type = Column(String)
     cookie = Column(String)
-    userid = Column(String)
-    master_id = Column(String)
-    contrib = Column(Integer, default=0)
-    valuable = Column(Integer, default=1)
-    has_uncompleted = Column(Integer, default=0)
-    start_time = Column(Integer, default=0)
-    wait_seconds = Column(Integer, default=0)
-    now_task = Column(String)
-    freeze_status = Column(Integer, default=0)
-    balance = Column(String, default='0')
-    today_income = Column(String, default='0')
-    total_income = Column(String, default='0')
-    withdraw_realname = Column(String)
-    prentice_count = Column(Integer, default=0)
+    idfa = Column(String)
+    oid_md5 = Column(String, default='')
+    idfv = Column(String, default='')
+    uid = Column(String, default='')
+    valuable = Column(Boolean, default=True)
+    is_working = Column(Boolean, default=False)
+    freeze_status = Column(Boolean, default=False)
+    balance = Column(Float, default=0)
+    today_income = Column(Float, default=0)
+    total_income = Column(Float, default=0)
+    add_time = Column(DateTime, default=now())
+    update_time = Column(DateTime, default=now(), onupdate=now())
+    field1 = Column(String, default='')
+    field2 = Column(String, default='')
+    field3 = Column(String, default='')
 
     def __repr__(self):
-        return '{id:%d,userid:%s}' % (self.id,self.userid)
+        return '{id=%d,user_id=%s}' % (self.id, self.user_id)
 
-# 定义ShikeUser对象:
-class ShikeUser(Base):
+
+class Task(Base):
     # 表的名字:
-    __tablename__ = 'ShikeUser'
+    __tablename__ = 'Task'
 
     # 表的结构:
     id = Column(Integer, primary_key=True, autoincrement=True)
-    idfa = Column(String)
-    uuid = Column(String)
-    cookie = Column(String)
-    userid = Column(String)
-    master_id = Column(String)
-    contrib = Column(Integer, default=0)
-    valuable = Column(Integer, default=1)
-    has_uncompleted = Column(Integer, default=0)
-    start_time = Column(Integer, default=0)
-    wait_seconds = Column(Integer, default=0)
-    now_task = Column(String)
-    freeze_status = Column(Integer, default=0)
-    balance = Column(String, default='0')
-    today_income = Column(String, default='0')
-    total_income = Column(String, default='0')
-    withdraw_realname = Column(String)
-    prentice_count = Column(Integer, default=0)
+    user_id = Column(String)
+    task_id = Column(String)
+    task_name = Column(String, default='')
+    bundle_id = Column(String)
+    process_name = Column(String)
+    status = Column(String)
+    block_type = Column(String)
+    fire_time = Column(DateTime)
+    app_type = Column(String)
+    add_time = Column(DateTime, default=now())
+    update_time = Column(DateTime, default=now(), onupdate=now())
+    field1 = Column(String, default='')
+    field2 = Column(String, default='')
+    field3 = Column(String, default='')
 
     def __repr__(self):
-        return '{id:%d,userid:%s}' % (self.id,self.userid)
+        return '{id=%d,user_id=%s}' % (self.id, self.user_id)
+
+
+Base.metadata.create_all(engine)

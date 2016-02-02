@@ -211,4 +211,6 @@ def run(max_count):
 
 
 if __name__ == '__main__':
-    fetch_task(disciple.fetch_masters()[0])
+    # fetch_task(disciple.fetch_masters()[0])
+
+    upload_app_status()

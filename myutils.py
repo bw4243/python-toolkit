@@ -10,14 +10,47 @@ import logging.handlers
 import uuid
 import os
 import sys
+import time
+import datetime
+import random
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
+def after_seconds(secs):
+    dt = datetime.datetime.utcfromtimestamp(time.time() + secs)
+    dt = dt + datetime.timedelta(hours=8)
+    return dt
+
+
+def now():
+    return datetime.datetime.now()
+
+
+def str2time(str):
+    timeArray = time.strptime(str, "%Y-%m-%d %H:%M:%S")
+    # 转换为时间戳:
+    return int(time.mktime(timeArray))
+
+
+def time2str(timestamp):
+    timeArray = time.localtime(timestamp)
+    return time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+
+
+def nowtime_str():
+    return time2str(int(time.time()))
 
 
 def gen_uuid():
     return str(uuid.uuid4()).upper()
 
+
+def random_str(length):
+    ss = '0123456789abcdefghijklmnopqrstuvwxyz'
+    ret_str = ''
+    for i in range(length):
+        index = random.randint(0, len(ss) - 1)
+        ret_str += ss[index]
+    return ret_str
 
 logger = None
 
@@ -131,4 +164,9 @@ if __name__ == '__main__':
     #
     # print(type(base64_decode()))
 
-    print(gen_uuid())
+    # print(gen_uuid())
+
+    # print(time2str(str2time("2016-10-12 23:40:32")))
+    # print(nowtime_str())
+    # print(after_seconds(60))
+    print(random_str(40))

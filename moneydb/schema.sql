@@ -1,22 +1,47 @@
-create table QiankaUser(
+
+drop table if exists User;
+create table User(
     id integer primary key autoincrement,
+    user_id text not null,
+    nick_name text not null,
+    app_type text not null,
+    oid_md5 text,
     idfa text not null,
-    uuid text not null,
+    idfv text,
+    uid text,
     cookie text not null,
-    userid text not null,
-    master_id text not null,
-    contrib integer default 0,
-    valuable integer default 1,
-    has_uncompleted integer default 0,
-    start_time integer default 0,
-    wait_seconds integer default 0,
-    now_task text default '',
-    freeze_status integer  default 0,
-    balance text default 0,
-    today_income text default 0,
-    total_income text default 0,
-    withdraw_realname text default '',
-    prentice_count integer default 0
+    valuable integer,
+    is_working integer,
+    balance text,
+    today_income text,
+    total_income text,
+    add_time text not null,
+    update_time text not null,
+    field1 text,
+    field2 text,
+    field3 text
+
 );
 
-CREATE INDEX IX_USERID ON QiankaUser(userid);
+
+
+drop table if exists Task;
+create table Task(
+    id integer primary key autoincrement,
+    common_user_id integer not null,
+    task_id text not null,
+    order_id text,
+    task_name text not null,
+    bundle_id text not null,
+    process_name text not null,
+    status text not null,
+    block_type text not null,
+    fire_time text not null,
+    app_type text not null,
+    add_time text not null,
+    update_time text not null,
+    field1 text,
+    field2 text,
+    field3 text
+);
+
