@@ -52,6 +52,19 @@ def random_str(length):
         ret_str += ss[index]
     return ret_str
 
+
+def random_number_str(length):
+    ss = '0123456789'
+    ret_str = ''
+    for i in range(length):
+        if i == 0:
+            index = random.randint(1, len(ss) - 1)
+        else:
+            index = random.randint(0, len(ss) - 1)
+        ret_str += ss[index]
+    return ret_str
+
+
 logger = None
 
 

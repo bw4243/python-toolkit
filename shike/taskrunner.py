@@ -96,7 +96,7 @@ def xb_online(user):
     logger.info(resp)
 
 
-def json_time(content, url=None,replace=0):
+def json_time(content, url=None, replace=0):
     content = 'p=' + encrypt_content(content, replace)
     if not url:
         url = 'http://xb.appshike.com/json_time'
@@ -162,6 +162,9 @@ def give_up(user, task):
                       body=content)
     logger.info(resp)
     return resp
+
+
+# def run_task(user, task):
 
 
 if __name__ == '__main__':

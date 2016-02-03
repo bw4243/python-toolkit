@@ -16,10 +16,10 @@ def params(data):
     dict = {
         'adid': adid,
         'adname': adname,
-        'check_click': '0',
+        'check_click': '1',
         'deviceid': data['idfa'],
-        'dsid': '482080528',
-        'mdt': '374546411',
+        'dsid': '382080527',
+        'mdt': '476093623',
         'order': userid + adid,
         'rdl': '0',
         'time': '%d' % (int(time.time())),
@@ -137,8 +137,9 @@ def upload_app_status(data):
         disciple.inc_contrib(data['userid'])
     else:
         i = 0
-        while json.loads(resp)['success'] == 'false' and i < 1:
+        while json.loads(resp)['success'] == 'false' and i < 2:
             i += 1
+            url = 'http://gaos.guo7.com/zq_api/index.php/lianmeng/ziji?%s' % params(data)
             resp = http_retry(url, headers=_headers)
             logger.info("uploadAppStatus resp:%s" % resp.decode('unicode-escape'))
             time.sleep(2)
@@ -205,7 +206,7 @@ def run(max_count):
             data['now_task'] = data['now_task'].encode('unicode-escape')
             disciple.update_task_info(data)
 
-            userinfo.sync_one_status(data)
+            # userinfo.sync_one_status(data)
     except:
         logger.exception("taskrunner exception")
 

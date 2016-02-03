@@ -83,34 +83,35 @@ def sync_user_info(user):
 
 
 def bind_info(user):
-    content = 'user_id=%s&oid_md5=%s&binding=17_1&idfa=%s&idfv=%s&uid=%s&sn=no&bs=F5D545302WJG5NYA3&cc=340&dm=iPhone7,2&sv=8.1.2&ot=-27144&mac=&rm=cc:46:d6:26:bc:6f&ri=172.24.125.213&dt=(null)&ut=453&ls=12988858368&pn=18&ver=1.19&rn=DP' \
+    log_download_xb(user)
+
+    content = 'user_id=%s&oid_md5=%s&binding=18_1&idfa=%s&idfv=%s&uid=%s&sn=no&bs=F5D545202WJG5NZA4&cc=120&dm=iPhone8,2&sv=8.1.2&ot=-27144&mac=&rm=cc:42:d6:26:bc:6f&ri=132.24.125.213&dt=(null)&ut=452&ls=12988858322&pn=18&ver=1.19&rn=DP' \
               % (user.user_id, user.oid_md5, user.idfa, user.idfv, user.uid)
     taskrunner.json_time(str(content), url='http://xb.appshike.com/json')
 
-    content = 'user_id=%s&idfa=&bs=F5D545302WJG5NYA3&cc=340&app=1611445442,333206289,com.alipay.iphoneclient,474278250,0,143465,1,9.5.1%s1611445442,425349261,com.netease.news,474534964,0,143465,1,474%s(null),0,com.sogou.sogouinput,454115166,0,0,1,3.0.0' \
-              % (user.user_id,  '%7C%7C', '%7C%7C')
-    # content='user_id=18293475&idfa=&bs=F5D439168VZFW5TBS&cc=130&app=1611445442,333206289,com.alipay.iphoneclient,474278250,0,143465,1,9.5.1%7c%7c1611445442,425349261,com.netease.news,474534964,0,143465,1,474%7c%7c(null),0,com.sogou.sogouinput,454115166,0,0,1,3.0.0'
+    # content = 'user_id=%s&idfa=&bs=F5D545302WJG5NYA3&cc=340&app=1611445442,333206289,com.alipay.iphoneclient,474278250,0,143465,1,9.5.1%s1611445442,425349261,com.netease.news,474534964,0,143465,1,474%s(null),0,com.sogou.sogouinput,454115166,0,0,1,3.0.0' \
+    #           % (user.user_id,  '%7C%7C', '%7C%7C')
+    content='user_id='+user.user_id+'&idfa=&bs=F5D545202WJG5NZA4&cc=120&app=1611445442,333206289,com.alipay.iphoneclient,474278250,0,143465,1,9.5.1%7C%7C1611445442,425349261,com.netease.news,474534964,0,143465,1,474%7C%7C(null),0,com.sogou.sogouinput,454115166,0,0,1,3.0.0%7C%7C(null),0,com.dianping.mp.mobile,471349340,0,0,1,4.1.0%7C%7C(null),0,com.google.chrome.ios,455139072,0,0,1,43.2357.51%7C%7C10037034958,351091731,com.dianping.dpscope,475571285,1,143465,1,8.0.0%7C%7C847712612,444934666,com.tencent.mqq,455195462,0,143465,1,5.6%7C%7C(null),0,com.dianping.apollo.crm,464783782,0,0,1,2.0.0.2%7C%7C(null),0,com.tongbu.tui.9675F56748,454500304,0,0,1,3.3.2%7C%7C(null),0,com.vstudio.PeakCamera,449226728,0,0,1,0.9.99%7C%7C1611445442,921478733,com.didapinche.taxi,475570075,0,143465,1,3.4.0%7C%7C'+user.user_id+'&ver=1.19&type=d_package'
     taskrunner.json_time(str(content),replace=1)
 
-    content = 'user_id=%s&idfa=&bs=F5D439168VZFW5TBS&cc=130&app=847712612,350962117,com.sina.weibo,453928544,0,143465,1,5.3.0%s10037034958,547166701,com.baidu.netdisk,475503388,0,143465,1,6.9.4%s(null),0,com.gad.shiliu,475550728,0,0,1,1.19' \
-              % (user.user_id, '%7C%7C', '%7C%7C')
+    content = 'user_id='+user.user_id+'&idfa=&bs=F5D545202WJG5NZA4&cc=120&app=847712612,350962117,com.sina.weibo,453928544,0,143465,1,5.3.0%7C%7C10037034958,547166701,com.baidu.netdisk,475503388,0,143465,1,6.9.4%7C%7C(null),0,com.gad.shiliu,475550728,0,0,1,1.19%7C%7C1611445442,878534496,com.penglzh.Super12306,472454167,0,143465,1,2.0%7C%7C(null),0,com.tencent.eim,464636026,0,0,1,74557%7C%7C10037034958,414478124,com.tencent.xin,473205693,0,143465,1,6.3.9%7C%7C847712612,414245413,com.360buy.jdmobile,455462496,0,143465,1,22026%7C%7C'+user.user_id+'&ver=1.19&type=d_package'
     taskrunner.json_time(str(content),replace=1)
 
-    content = 'user_id=%s&bs=F5D439168VZFW5TBS&cc=130&idfa=%s&idfv=%s&uid=%s&mac=cc:46:d6:26:bc:6f&usb=28.000000&app=launchd,112685.932940,16390||nfcd,112673.934593,16388||WeChat,98017.934869,16388||eapolclient,167.936738,16644||com.apple.WebKit,62.936910,16388||com.apple.WebKit,62.936985,16388||com.apple.WebKit,61.937043,16388||com.apple.WebKit,40.937272,16388||shiliu,8.937662,16388||com.apple.WebKit,0.937784,16388||&ver=1.19&type=d_process' \
+    content = 'user_id=%s&bs=F5D545202WJG5NZA4&cc=120&idfa=%s&idfv=%s&uid=%s&mac=cc:41:d6:26:bc:6f&usb=28.000000&app=launchd,112685.932940,16390||nfcd,112673.934593,16388||WeChat,98017.934869,16388||eapolclient,167.936738,16644||com.apple.WebKit,62.936910,16388||com.apple.WebKit,62.936985,16388||com.apple.WebKit,61.937043,16388||com.apple.WebKit,40.937272,16388||shiliu,8.937662,16388||com.apple.WebKit,0.937784,16388||&ver=1.19&type=d_process' \
               % (user.user_id, user.idfa, user.idfv, user.uid)
     taskrunner.json_time(str(content))
 
 
 def add_user():
     user = User(
-        user_id='16715527',
-        nick_name=u'晶晶',
-        cookie='Hm_lvt_55a5855402d9f76f9739ffa75d37dfb2=1452505832,1452515643,1452529063,1452614927; OD=fSTxC/hYV33V+qPULOZ4SW3Hv0yxHFzZrLR+SC4T2tALdWFC2pf1oYnL5/CxuA0x; JSESSIONID=7D11114C8D3D092047BA0BF40B7DDC2D; SERVERID=68eb2ae2fa25dc0af715a6507d823a0b|1452693600|1452693600',
-        oid_md5='6B758696931041EC015EB9127851876F',
+        user_id='18628202',
+        nick_name=u'寻思',
+        cookie='aliyungf_tc=AQAAADnttXVNFQkABoSZtLzl3vjjf0Wt; JSESSIONID=ACF5518874E853C25B4F706609C2D047; OD=6BYxG02tHVE2Arx0GsJd8eFL0Ga55PdZDPkUTOAbG+wf8o4yNI+d8ftZY+C2WwXx',
+        oid_md5='22A02149EDAFBA184ED0A1A8AE6936E0',
         app_type=APP_TYPE_XIAO_BIN,
-        idfa='7E48C310-7260-4E65-AD76-7180422A2214',  # gen_uuid(),
-        idfv='84AC9200-69F7-4437-B91B-4CA0839ECF79',  # gen_uuid(),
-        uid='d41d8cd98f00b204e9800998ecf8427e2af0c2f8',  # random_str(40)
+        idfa= gen_uuid(),
+        idfv= gen_uuid(),
+        uid=random_str(40)
     )
     db.add(user)
 
