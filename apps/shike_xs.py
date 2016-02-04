@@ -234,12 +234,8 @@ def check_sync():
 if __name__ == '__main__':
     # open('sync_xs.txt', 'w').write('1')
     # for i in range(10):
-    # if check_sync():
-    #     completeTask()
-    # else:
-    #     print("doing")
+    if check_sync():
+        completeTask()
+    else:
+        print("doing")
         # time.sleep(3)
-
-    while 1:
-        uploadProcessStatus('a','b')
-        time.sleep(2)
