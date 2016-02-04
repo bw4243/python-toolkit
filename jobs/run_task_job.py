@@ -16,8 +16,8 @@ def init():
 
     current_path = os.path.split(os.path.realpath(__file__))[0]
     print(current_path)
-    os.chdir(current_path)
-    sys.path.insert(0, current_path)
+    os.chdir(current_path[:current_path.rfind('/')])
+    sys.path.insert(0, current_path[:current_path.rfind('/')])
 
 
 def run():
