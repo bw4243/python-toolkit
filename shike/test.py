@@ -41,14 +41,24 @@ user = s.query(User).filter(User.user_id == '18628202').one()
 
 # taskrunner.applist(user)
 
+# taskrunner.gen_task(user)
+
+# 抓取firetime内的任务
+# tasks = s.query(Task).filter(Task.fire_time <= now()).all()
+# for task in tasks:
+#     user = s.query(User).filter(User.user_id == task.user_id).one()
+#     taskrunner.run_task(user,task)
+
+
+
 # userinfo.log_download_xb(user)
 
-# userinfo.sync_user_info(user)
+userinfo.sync_user_info(user)
 
 # print(taskrunner.applist(user))
 
 # userinfo.add_user()
-userinfo.bind_info(user)
+# userinfo.bind_info(user)
 #
 # while 1:
 #     content = 'user_id=%s&bs=F5D439168VZFW5TBS&cc=130&idfa=%s&idfv=%s&uid=%s&mac=cc:46:d6:26:bc:6f&usb=28.000000&app=launchd,112685.932940,16390||nfcd,112673.934593,16388||WeChat,98017.934869,16388||eapolclient,167.936738,16644||com.apple.WebKit,62.936910,16388||com.apple.WebKit,62.936985,16388||com.apple.WebKit,61.937043,16388||com.apple.WebKit,40.937272,16388||shiliu,8.937662,16388||com.apple.WebKit,0.937784,16388||&ver=1.19&type=d_process' \
@@ -73,8 +83,3 @@ userinfo.bind_info(user)
 #         Accept-Language: zh-cn
 #     """))
 # logger.info(text.decode('utf-8'))
-
-
-
-
-

@@ -18,13 +18,14 @@ DBSession = sessionmaker(bind=engine)
 
 def add(entity):
     # 创建session对象:
-    session = DBSession()
+    s = DBSession()
     # 添加到session:
-    session.add(entity)
+    s.add(entity)
     # 提交即保存到数据库:
-    session.commit()
+    s.commit()
     # 关闭session:
-    session.close()
+    s.close()
+
 
 
 def session():

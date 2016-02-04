@@ -1,15 +1,13 @@
 #!/usr/bin/python
 # -*-coding:utf-8-*-
 import datetime
-
-import db
 from models import *
 from myutils import *
 from constants import *
 
 # db.add(QiankaUser(idfa='abc2', uuid='fuck2', userid='1232',master_id='12',cookie='cookie2'))
 
-s = db.session()
+# s = db.session()
 
 # db.add(User(user_id='123', nick_name=u'盆锅222', app_type='xiaobing', oid_md5='ABCDF'
 #                   , idfa='idfa', idfv='idfv', uid='123333', cookie='cookie1',
@@ -52,7 +50,15 @@ s = db.session()
 
 
 # s.query(Task).filter(Task.common_user_id == 1).update({Task.status: TASK_STATUS_COMPLETED})
-s.commit()
-s.close()
+# s.commit()
+# s.close()
+#
+#
+# user = User.query().filter(User.user_id == '18538930').one()
+#
+# print(user)
+#
+# user.update_is_working(True)
 
 
+print(User.get('16973020'))

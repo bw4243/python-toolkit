@@ -65,45 +65,63 @@ def random_number_str(length):
     return ret_str
 
 
-logger = None
+# # 日志缓存
+# __log_cache = {}
+#
+# __console_log = None
 
 
 # 2. init the logging
-def __init_log():
-    LOG_PATH = '/data/logs/qianka/'
-    LOG_FILE = 'qianka.log'
+def init_log(log_file):
+    # # 优先从缓存读
+    # global __log_cache
+    # if log_file in __log_cache:
+    #     return __log_cache[log_file]
+
+    LOG_PATH = os.path.dirname(log_file)
+    LOG_FILE = os.path.basename(log_file)
 
     if not os.path.exists(LOG_PATH):
         os.system('mkdir -p %s' % LOG_PATH)
 
-    file = LOG_PATH + LOG_FILE
+    if not os.path.exists(LOG_FILE):
+        os.system('touch %s' % log_file)
+        os.system('chmod 666 %s' % log_file)
 
-    os.system('chmod 666 %s' % file)
-
-    fmt = '%(asctime)s %(filename)s:%(lineno)s [%(levelname)s] - %(message)s'
+    fmt = '%(asctime)s %(pathname)s:%(lineno)s [%(levelname)s] - %(message)s'
     formatter = logging.Formatter(fmt)  # 实例化formatter
 
-    handler = logging.handlers.TimedRotatingFileHandler(file, when='midnight',
+    handler = logging.handlers.TimedRotatingFileHandler(log_file, when='midnight',
                                                         encoding='UTF-8')  # 实例化handler
     handler.setFormatter(formatter)  # 为handler添加formatter
     handler.suffix = '%Y-%m-%d'
 
-    logger = logging.getLogger('tst')  # 获取名为tst的logger
-    logger.addHandler(handler)  # 为logger添加handler
-    logger.setLevel(logging.DEBUG)
+    _logger = logging.getLogger('tst')  # 获取名为tst的logger
+    _logger.addHandler(handler)  # 为logger添加handler
+    _logger.setLevel(logging.DEBUG)
 
+    # sqlalchemy
+    logging.getLogger('sqlalchemy.engine').addHandler(handler)
+
+    # global __console_log
+    #
+    # if not __console_log:
     console = logging.StreamHandler()
     console.setLevel(logging.DEBUG)
     console.setFormatter(formatter)
-    logger.addHandler(console)
+    _logger.addHandler(console)
+    # __console_log = console
 
     # logger.info('first info message')
     # logger.debug('first debug message')
-    return logger
+
+    # 放入缓存
+    # __log_cache[log_file] = _logger
+
+    return _logger
 
 
-if not logger:
-    logger = __init_log()
+logger = init_log('/data/logs/moneydb/moneydb.log')
 
 
 def base64_decode(s):
@@ -182,4 +200,6 @@ if __name__ == '__main__':
     # print(time2str(str2time("2016-10-12 23:40:32")))
     # print(nowtime_str())
     # print(after_seconds(60))
-    print(random_str(40))
+    # print(random_str(40))
+    # print(type(logger))
+    logger.info('sdf')
