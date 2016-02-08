@@ -11,7 +11,7 @@ print('db.py invoked')
 # 创建对象的基类:
 Base = declarative_base()
 # 初始化数据库连接:
-engine = create_engine('sqlite:////data/dbs/money.db', encoding='UTF-8', echo=True)
+engine = create_engine('sqlite:////data/dbs/money.db', encoding='UTF-8', echo=False)
 # 创建DBSession类型:
 DBSession = sessionmaker(bind=engine)
 

@@ -101,7 +101,7 @@ def init_log(log_file):
     _logger.setLevel(logging.DEBUG)
 
     # sqlalchemy
-    logging.getLogger('sqlalchemy.engine').addHandler(handler)
+    # logging.getLogger('sqlalchemy.engine').addHandler(handler)
 
     # global __console_log
     #
