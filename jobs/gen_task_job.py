@@ -25,6 +25,8 @@ def run():
     from myutils import logger
 
     args = sys.argv
+
+    logger.info('gen_task_job: %s' % args[1])
     try:
 
         if len(args) != 2:

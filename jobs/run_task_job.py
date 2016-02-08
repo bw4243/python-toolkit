@@ -27,6 +27,8 @@ def run():
 
     args = sys.argv
 
+    logger.info('run_task_job: %s' % args[1])
+
     try:
         if len(args) != 2:
             logger.error('At least 1 params when startup the job!!!!')
