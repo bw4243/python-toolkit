@@ -3,7 +3,7 @@
 
 # 可选参数: python gen_task_job.py 16973020
 # 参数分别含义为: user_id
-
+import random
 import sys
 import os
 import time
@@ -62,7 +62,7 @@ def run():
             if not user: break
             # 生成任务
             runner.gen_task(user)
-            time.sleep(5)
+            time.sleep(random.randint(2, 5))
 
         logger.info('gen_task_job[%s] speeds time: %ds' % (args[1], (end_time - start_time)))
     except:
