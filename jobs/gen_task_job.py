@@ -62,7 +62,7 @@ def run():
             if not user: break
             # 生成任务
             runner.gen_task(user)
-            time.sleep(2)
+            time.sleep(5)
 
         logger.info('gen_task_job[%s] speeds time: %ds' % (args[1], (end_time - start_time)))
     except:
