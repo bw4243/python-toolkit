@@ -84,7 +84,7 @@ def init_log(log_file):
     if not os.path.exists(LOG_PATH):
         os.system('mkdir -p %s' % LOG_PATH)
 
-    if not os.path.exists(LOG_FILE):
+    if not os.path.exists(log_file):
         os.system('touch %s' % log_file)
         os.system('chmod 666 %s' % log_file)
 
