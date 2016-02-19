@@ -85,9 +85,9 @@ def sync_user_info(user):
 def bind_info(user):
     log_download_xb(user)
 
-    ss='bs=F5D545202WJG5NZA1&cc=110'
+    ss='bs=F9D145502ZJG5NZB4&cc=120'
 
-    content = 'user_id=%s&oid_md5=%s&binding=18_1&idfa=%s&idfv=%s&uid=%s&sn=no&%s&dm=iPhone8,2&sv=8.1.2&ot=-27142&mac=&rm=cc:42:d6:26:3c:6f&ri=132.24.125.100&dt=(null)&ut=451&ls=12988858321&pn=18&ver=1.19&rn=DP' \
+    content = 'user_id=%s&oid_md5=%s&binding=18_1&idfa=%s&idfv=%s&uid=%s&sn=no&%s&dm=iPhone8,2&sv=8.1.2&ot=-27342&mac=&rm=c2:42:d6:26:3c:6f&ri=135.24.125.100&dt=(null)&ut=451&ls=12988856311&pn=18&ver=1.19&rn=DP' \
               % (user.user_id, user.oid_md5, user.idfa, user.idfv, user.uid,ss)
     taskrunner.json_time(str(content), url='http://xb.appshike.com/json')
 
@@ -99,17 +99,17 @@ def bind_info(user):
     content = 'user_id=' + user.user_id + '&idfa=&'+ss+'&app=847712612,350962117,com.sina.weibo,453928544,0,143465,1,5.3.0%7C%7C10037034958,547166701,com.baidu.netdisk,475503388,0,143465,1,6.9.4%7C%7C(null),0,com.gad.shiliu,475550728,0,0,1,1.19%7C%7C1611445442,878534496,com.penglzh.Super12306,472454167,0,143465,1,2.0%7C%7C(null),0,com.tencent.eim,464636026,0,0,1,74557%7C%7C10037034958,414478124,com.tencent.xin,473205693,0,143465,1,6.3.9%7C%7C847712612,414245413,com.360buy.jdmobile,455462496,0,143465,1,22026%7C%7C' + user.user_id + '&ver=1.19&type=d_package'
     taskrunner.json_time(str(content), replace=1)
 
-    content = 'user_id=%s&%s&idfa=%s&idfv=%s&uid=%s&mac=cc:41:d6:26:bc:6f&usb=28.000000&app=launchd,112685.932940,16390||nfcd,112673.934593,16388||WeChat,98017.934869,16388||eapolclient,167.936738,16644||com.apple.WebKit,62.936910,16388||com.apple.WebKit,62.936985,16388||com.apple.WebKit,61.937043,16388||com.apple.WebKit,40.937272,16388||shiliu,8.937662,16388||com.apple.WebKit,0.937784,16388||&ver=1.19&type=d_process' \
+    content = 'user_id=%s&%s&idfa=%s&idfv=%s&uid=%s&mac=c1:41:d6:26:bc:6f&usb=28.000000&app=launchd,112685.932940,16390||nfcd,112673.934593,16388||WeChat,98017.934869,16388||eapolclient,167.936738,16644||com.apple.WebKit,62.936910,16388||com.apple.WebKit,62.936985,16388||com.apple.WebKit,61.937043,16388||com.apple.WebKit,40.937272,16388||shiliu,8.937662,16388||com.apple.WebKit,0.937784,16388||&ver=1.19&type=d_process' \
               % (user.user_id,ss, user.idfa, user.idfv, user.uid)
     taskrunner.json_time(str(content))
 
 
 def add_user():
     user = User(
-        user_id='18932822',
-        nick_name=u'茜茜',
-        cookie='aliyungf_tc=AQAAAIST3DDxXQcAihfPjHuLUYkhhaZX; JSESSIONID=C3A66FDFC1F79EA1CCB3DEB0F2AEFBF9; OD=JW30GYIzzPTlmGtBCblDpwwmFewiWfReHVkxM1pnvAq8Wn8ToidlyZsXkRdcfaw2',
-        oid_md5='3980D3F1BD4CF3588265A7BD5FFA96D5',
+        user_id='19308584',
+        nick_name=u'小胖子',
+        cookie='aliyungf_tc=AQAAADqAqnWjbwsABoSZtJa4rk/sKZC8; JSESSIONID=49D486B708049C300E75FDF664953EF4; OD=cO7w4o/SXBY41V9pUfeb2ZRsWs+D2bNThFzKS118hokg5ncJ6eNfkqbmbzRCFC/u',
+        oid_md5='7882C7C194D09B1FB4C54CFED4301B71',
         app_type=APP_TYPE_XIAO_BIN,
         idfa=gen_uuid(),
         idfv=gen_uuid(),
@@ -127,5 +127,5 @@ def log_download_xb(user):
 
 if __name__ == '__main__':
     # add_user()
-    user=User.get('18932822')
+    user=User.get('19308584')
     bind_info(user)
