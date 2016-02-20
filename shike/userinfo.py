@@ -132,7 +132,27 @@ def log_download_xb(user):
                            headers=get_header(user.cookie)))
 
 
+def chongliuliang(user):
+    '''
+    0: {sellingPrice: "3", shopProductName: "联通全国20M", shopProductId: "000000004d9f2a6d014db6e97a2300cf"}
+    1: {sellingPrice: "6", shopProductName: "联通全国50M", shopProductId: "000000004cdff715014ce05ff5d70000"}
+    2: {sellingPrice: "9.5", shopProductName: "联通全国100M", shopProductId: "000000004d9f2a6d014db6ea579400ef"}
+    3: {sellingPrice: "14", shopProductName: "联通全国200M", shopProductId: "000000004d375387014d41da22a8002f"}
+    4: {sellingPrice: "28", shopProductName: "联通全国500M", shopProductId: "000000004d9f2a6d014db6ec9e29010f"}
+    '''
+
+    liuliangset={
+
+    }
+    content='product=%s&czPhone=18521058664&oidMd5=%s&catName=%s&option=0' % ('000000004d9f2a6d014db6ea579400ef',user.oid_md5,'%25E4%25B8%25AD%25E5%259B%25BD%25E8%2581%2594%25E9%2580%259A')
+    resp=http_retry('http://i.appshike.com/itry/liuliangchongzhi/getLiuliangCz',method='POST',headers={'cookie':user.cookie,'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},body=content)
+
+    print(resp)
+
+
 if __name__ == '__main__':
-    add_user(user_id='19396391', nick_name=u'造梦', cookie='OD=OGJUnyVS5hHRz2/pZURfBLiTVGLB1ILxOZqFAQRFrEbm47WFGdfb/ySGw9pacimG', oid_md5='E51B8062A58E35C80ADF96CD9D4C7179')
+    add_user(user_id='19434498', nick_name=u'小弟', cookie='OD=qSVnlRvRxVImb9UU7JWQta9gAWhoQkB2B2AdnmI1MocCdR8SBmAf5UqtYmZ3Go54', oid_md5='01614770CED4D16B3B5406379655F495')
     # user = User.get('19374606')
     # bind_info(user)
+
+    # chongliuliang(User.get('19395206'))
