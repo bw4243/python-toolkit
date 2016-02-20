@@ -222,7 +222,7 @@ def run_task(user, task):
             userinfo.sync_user_info(user)
         else:
             # 判断是否已经超时  默认5分钟
-            if (task.update_time - task.add_time).total_seconds() > 5 * 60:
+            if (task.update_time - task.add_time).total_seconds() > 6 * 60:
                 task.update_task_status(TASK_STATUS_TIMEOUT)
                 # 放弃任务
                 give_up(user, task)
