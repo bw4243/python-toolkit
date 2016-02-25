@@ -10,17 +10,6 @@ from myutils import *
 import userinfo
 
 
-def get_header(cookie):
-    return {
-        'Cookie': cookie,
-        "Accept": "text/plain, */*; q=0.01",
-        "Accept-Language": 'zh-cn',
-        "Content-Type": 'application/x-www-form-urlencoded; charset=UTF-8',
-        "Connection": 'keep-alive',
-        "User-Agent": 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12F70 Safari/600.1.4',
-    }
-
-
 def sort_app_list(list):
     if len(list) > 1:
         list.sort(key=lambda x: int(x['order_status_disp']))
@@ -30,7 +19,21 @@ def sort_app_list(list):
 
 
 def applist(user):
-    resp = http_retry("http://i.appshike.com/shike/getApplist/%s/%s" % (user.user_id, user.oid_md5))
+    resp = http_retry("http://i.appshike.com/shike/getApplist/%s/%s" % (user.user_id, user.oid_md5), method='POST',
+                      body='r=%d' % (int(time.time() * 1000)), headers=headers_from_str('''
+                        Host: i.appshike.com
+                        Accept: */*
+                        Accept-Language: zh-CN,zh;q=0.8,en;q=0.6
+                        Connection: keep-alive
+                        Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+                        Cookie: JSESSIONID=6DEC5C3BD071AEF96867F511FA686F2C;%s
+                        Host: i.appshike.com
+                        Origin: http://i.appshike.com
+                        Referer:http://i.appshike.com/shike/appList?t=1456368417703
+                        User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1
+                        X-Requested-With: XMLHttpRequest
+                        Cache-Control: no-cache
+                      ''' % user.cookie))
     logger.info(resp.decode('UTF-8'))
 
     list = json.loads(resp)
@@ -60,7 +63,7 @@ def complete_task(user):
 
         # 2.点击纪录
         url = 'http://i.appshike.com/shike/user_click_record'
-        text = http_retry(url, method='POST', headers=get_header(user.cookie), body=content)
+        text = http_retry(url, method='POST', headers=userinfo.get_header(user.cookie), body=content)
         logger.info('user_click_record resp: %s' % text)
 
         if text != '0':
@@ -69,12 +72,12 @@ def complete_task(user):
 
         # 3.复制关键词
         url = 'http://i.appshike.com/shike/copy_keyword'
-        text = http_retry(url, method='POST', headers=get_header(user.cookie), body=content)
+        text = http_retry(url, method='POST', headers=userinfo.get_header(user.cookie), body=content)
         logger.info(text)
 
         while text != '0':
             logger.info("have not greped ,retry!")
-            text = http_retry(url, method='POST', headers=get_header(user.cookie), body=content)
+            text = http_retry(url, method='POST', headers=userinfo.get_header(user.cookie), body=content)
 
         # 4.放入task表中,等待执行
         task = Task(
@@ -102,7 +105,7 @@ def complete_task(user):
 
 
 def xb_online(user):
-    headers = get_header(user.cookie)
+    headers = userinfo.get_header(user.cookie)
     content = 'user_id=%s&status=0' % user.user_id
     content = 'p=' + encrypt_content(content.decode('UTF-8'))
     url = 'http://xb.appshike.com/xb_online'
@@ -126,14 +129,15 @@ def json_time(content, url=None, replace=0):
 
 
 def fake_down_and_open(user, task):
-    tp = (user.user_id, task.task_id, task.bundle_id, '%7C%7C', user.user_id)
+    tp = (user.user_id, user.idfa, user.field1, task.task_id, task.bundle_id, '%7C%7C', user.user_id)
     # 下载中
-    content = 'user_id=%s&idfa=&bs=F5D545302WJG5NYA3&cc=340&app=(null),%s,%s,473522972,0,0,0,(null)%s%s&ver=1.19&type=d_package' % tp
+    content = 'user_id=%s&idfa=%s&bs=%s&cc=340&app=(null),%s,%s,473522972,0,0,0,(null)%s%s&ver=1.19&type=d_package' % tp
     json_time(content)
     print_app_status(user, task)
 
     # 下载完成
-    content = 'user_id=%s&idfa=&bs=F5D545302WJG5NYA3&cc=340&app=382080527,%s,%s,473523166,0,143465,1,2.110.0%s%s&ver=1.19&type=d_package' % tp
+    tp = (user.user_id, user.idfa, user.field1, user.field2, task.task_id, task.bundle_id, '%7C%7C', user.user_id)
+    content = 'user_id=%s&idfa=%s&bs=%s&cc=340&app=%s,%s,%s,473523166,0,143465,1,2.110.0%s%s&ver=1.19&type=d_package' % tp
     json_time(content)
     print_app_status(user, task)
 
@@ -142,8 +146,8 @@ def fake_down_and_open(user, task):
 
 
 def upload_process_status(user, task):
-    content = 'user_id=%s&bs=F5D545302WJG5NYA3&cc=340&idfa=%s&idfv=%s&uid=%s&mac=80:89:17:87:49:92&usb=46.000000&app=launchd,2291948.993783,16390||CVMServer,606019.996496,16388||WeChat,3516.999015,16388||BDPhoneBrowser,3051.999252,16388||SafariCloudHisto,2734.999395,16388||dongxiang,2666.999904,16388||nanoregistryd,2609.000210,16388||nanoregistrylaun,2602.000325,16388||MobileNotes,1869.001144,16388||QQ,375.002563,16388||carkitd,363.002657,16388||com.apple.WebKit,324.002822,16388||com.apple.WebKit,324.002923,16388||%s,242.003093,16388||&ver=1.19&type=d_process' \
-              % (user.user_id, user.idfa, user.idfv, user.uid, task.process_name)
+    content = 'user_id=%s&bs=%s&cc=110&idfa=%s&idfv=%s&uid=%s&mac=80:89:17:87:49:91&usb=46.000000&app=launchd,2291948.993783,16390||CVMServer,606019.996496,16388||WeChat,3516.999015,16388||BDPhoneBrowser,3051.999252,16388||SafariCloudHisto,2734.999395,16388||dongxiang,2666.999904,16388||nanoregistryd,2609.000210,16388||nanoregistrylaun,2602.000325,16388||MobileNotes,1869.001144,16388||QQ,375.002563,16388||carkitd,363.002657,16388||com.apple.WebKit,324.002822,16388||com.apple.WebKit,324.002923,16388||%s,242.003093,16388||&ver=1.19&type=d_process' \
+              % (user.user_id, user.field1, user.idfa, user.idfv, user.uid, task.process_name)
 
     json_time(content)
 
@@ -172,7 +176,7 @@ def encrypt_content(content, replace=1):
 
 def give_up(user, task):
     content = 'appid=%s&order_id=%s&doingStatus=r3&user_id=%s' % (task.task_id, task.field1, user.user_id)
-    resp = http_retry('http://i.appshike.com/shike/giveupApp', method='POST', headers=get_header(user.cookie),
+    resp = http_retry('http://i.appshike.com/shike/giveupApp', method='POST', headers=userinfo.get_header(user.cookie),
                       body=content)
     logger.info(resp)
     return resp

@@ -3,13 +3,6 @@
 
 import httplib
 import json
-import threading
-import urllib
-import os
-import time
-import datetime
-from pyDes import *
-import base64
 from moneydb.models import User
 from myutils import *
 from moneydb import db
@@ -18,14 +11,17 @@ from moneydb.constants import *
 
 
 def get_header(cookie):
-    return {
-        'Cookie': cookie,
-        "Accept": "text/plain, */*; q=0.01",
-        "Accept-Language": 'zh-cn',
-        "Content-Type": 'application/x-www-form-urlencoded; charset=UTF-8',
-        "Connection": 'keep-alive',
-        "User-Agent": 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12F70 Safari/600.1.4',
-    }
+    return headers_from_str('''
+        Accept:application/json, text/javascript, */*; q=0.01
+        Accept-Language:zh-CN,zh;q=0.8,en;q=0.6
+        Connection:keep-alive
+        Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+        Cookie:%s
+        Host:i.appshike.com
+        Origin:http://i.appshike.com
+        User-Agent:Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1
+        X-Requested-With:XMLHttpRequest
+    ''' % cookie)
 
 
 def get_user_finance(user):
@@ -119,7 +115,8 @@ def add_user(user_id, nick_name, cookie, oid_md5):
         uid=random_str(40),
         today_income=1,
         total_income=1,
-        field1='F5' + random_str(15).upper()
+        field1='F5' + random_str(15).upper(),
+        field2=random_number_str(9)
     )
 
     db.add(user)
@@ -157,9 +154,9 @@ def chongliuliang(user):
 
 
 if __name__ == '__main__':
-    add_user(user_id='19434498', nick_name=u'小弟',
-             cookie='OD=qSVnlRvRxVImb9UU7JWQta9gAWhoQkB2B2AdnmI1MocCdR8SBmAf5UqtYmZ3Go54',
-             oid_md5='01614770CED4D16B3B5406379655F495')
+    add_user(user_id='19707918', nick_name=u'东山',
+             cookie='OD=OYmqb9U7qHBJTG0RtdGonAhO7+4VuTZsqqBuXUWyBR5CYxK8eCmh6NDttsk3ro0l',
+             oid_md5='49F2E4120DF04021A01FD07DD920A42B')
     # user = User.get('19374606')
     # bind_info(user)
 
