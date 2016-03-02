@@ -40,6 +40,10 @@ def nowtime_str():
     return time2str(int(time.time()))
 
 
+def now_millisec():
+    return int(time.time() * 1000)
+
+
 def gen_uuid():
     return str(uuid.uuid4()).upper()
 
@@ -91,10 +95,11 @@ def init_log(log_file):
     fmt = '%(asctime)s %(pathname)s:%(lineno)s [%(levelname)s] - %(message)s'
     formatter = logging.Formatter(fmt)  # 实例化formatter
 
-    handler = logging.handlers.TimedRotatingFileHandler(log_file, when='midnight',
-                                                        encoding='UTF-8')  # 实例化handler
+    # handler = logging.handlers.TimedRotatingFileHandler(log_file, when='midnight',backupCount=7,
+    #                                                     encoding='UTF-8')  # 实例化handler
+    handler = logging.handlers.WatchedFileHandler(log_file,encoding='UTF-8')
     handler.setFormatter(formatter)  # 为handler添加formatter
-    handler.suffix = '%Y-%m-%d'
+    # handler.suffix = '%Y-%m-%d'
 
     _logger = logging.getLogger('tst')  # 获取名为tst的logger
     _logger.addHandler(handler)  # 为logger添加handler

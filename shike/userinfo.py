@@ -145,7 +145,8 @@ def chongliuliang(user):
 
     }
     content = 'product=%s&czPhone=18521058664&oidMd5=%s&catName=%s&option=0' % (
-    '000000004d9f2a6d014db6ea579400ef', user.oid_md5, '%25E4%25B8%25AD%25E5%259B%25BD%25E8%2581%2594%25E9%2580%259A')
+        '000000004cdff715014ce05ff5d70000', user.oid_md5,
+        '%25E4%25B8%25AD%25E5%259B%25BD%25E8%2581%2594%25E9%2580%259A')
     resp = http_retry('http://i.appshike.com/itry/liuliangchongzhi/getLiuliangCz', method='POST',
                       headers={'cookie': user.cookie,
                                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}, body=content)
@@ -153,11 +154,113 @@ def chongliuliang(user):
     print(resp)
 
 
+def send_msg(user, mobile):
+    '''
+    给手机发验证码短信
+    :param user:
+    :param mobile:
+    :return:
+    '''
+    content = 'tel=%s&openidMD5=%s&cur_time=%d' % (mobile, user.oid_md5, now_millisec())
+    resp = http_retry('http://i.appshike.com/itry/personalcenter/bindingTelSendMsg', method='POST',
+                      headers=get_header(user.cookie), body=content)
+    print(resp)
+
+
+def bind_alipay(user, mobile, code):
+    '''
+    绑定支付吧账户
+    :param user:
+    :param mobile:
+    :param code:
+    :return:
+    '''
+    content = 'bank_username=%s&vCode=%s&tel=%s&bank_num=%s&bank_flag=0&flag=%s&openidMD5=%s' % (
+        '%E5%91%A8%E5%BF%97%E9%B9%8F', code, mobile, 'admin%40zhouzhipeng.com', '%E6%94%AF%E4%BB%98%E5%AE%9D',
+        user.oid_md5)
+    resp = http_retry('http://i.appshike.com/itry/personalcenter/bindingBankNum', method='POST',
+                      headers=get_header(user.cookie), body=content)
+    print(resp)
+
+
+def quick_bind_user(cookie, url):
+    '''
+    正熙		日盈堂堂主
+    易涟		月青堂堂主
+    左丘宁		星鸣堂徐州御灵手
+    北宫杵		星鸣堂徐州御灵手
+    图尉		星鸣堂豫州御灵手
+    苗巧		星鸣堂豫州御灵手
+    岚宽		星鸣堂青州御灵手
+    芊筱		星鸣堂青州御灵手
+    单雨童		御灵团御灵手
+    明降		星鸣堂勘察手
+    元翔		星鸣堂勘察手
+    甲子直		虎啸堂堂主，景门三煞之一，甲轩的养父
+    甲兰		甲子直之女，虎啸堂大小姐
+    金同福		同福镖局总镖头，景门三煞之一
+    金大龙		金同福之子
+    七姨太		金同福的第七个老婆，年轻貌美
+    丁洪		龙吟庄庄主，景门三煞之一
+    丁砂颖		龙吟庄庄主丁洪之女，丁砂平的姐姐
+    丁砂平		龙吟庄庄主丁洪之子，丁砂颖的弟弟
+    余万雄		万雄帮帮主
+    伏龙		江湖游侠，“游龙戏凤”之一
+    凤笑		江湖游侠，“游龙戏凤”之一
+    郎里香		浪里花的姐姐
+    仇人九		野猪坨土匪的匪首，被一个拥有十七年灵愿的灵主附体
+    燕清风		甲轩生父
+    燕凌霞		甲轩的姐姐
+
+    :return:
+    '''
+
+    # cookie='OD	mjiii1eQxi7/Lldox9s+VzXs1Ymt3W+wpyhRT3OMz9Wo5SXkPQt5GLQ9nKWlTAcW	i.appshike.com	/	2017年2月21日 GMT+817:12:29	66 B	✓	'
+    # cookie='OD	QgPRJzjyHbt7p1DhV8bqt3lDdJTymFt0ABqZ0PNx5YAk1iaKyvCDZzDHcFuORUcO	i.appshike.com	/	2017年2月22日 GMT+809:44:20	66 B	✓	'
+    # url='/shike/getApplist/19854020/4DACC2DC425783D08009AD1A8C802F09'
+    # url='/shike/getApplist/19885298/B0D611859698CA0FCE4A6AF019319B8D'
+    nick_name = u'default'
+    od = cookie.split('\t')[1]
+    arr = url.split('/')
+
+    userid = arr[3]
+    oid = arr[4]
+
+    print(userid)
+    print(oid)
+    print(od)
+
+    add_user(user_id=userid, nick_name=nick_name,
+             cookie='OD=%s' % od,
+             oid_md5=oid)
+
+
+def alipay_withdraw(user):
+    balance = user.balance
+    amount = 10
+    if balance >= 100:
+        amount = 100
+    elif balance >= 50:
+        amount = 50
+    elif balance >= 30:
+        amount = 30
+    elif balance >= 10:
+        amount = 10
+    content = 'flag=no_pass&pw=&bank=%s&money=%d&openid_md5=%s&total_income=%f&cur_time=%d' % (user.field3, amount,user.oid_md5,user.total_income,now_millisec())
+    print(content)
+    resp = http_retry('http://i.appshike.com/itry/income/withdraw_deposit', method='POST',
+                      headers=get_header(user.cookie), body=content)
+    print(resp)
+    return resp
+
+
 if __name__ == '__main__':
-    add_user(user_id='19707918', nick_name=u'东山',
-             cookie='OD=OYmqb9U7qHBJTG0RtdGonAhO7+4VuTZsqqBuXUWyBR5CYxK8eCmh6NDttsk3ro0l',
-             oid_md5='49F2E4120DF04021A01FD07DD920A42B')
+    add_user(user_id='19990285', nick_name=u'桃花',
+             cookie='OD=1YwkGJraimLZLZh6BNIG+H/5FJZ8YMhifp/hK/8iwBe7ncwODuTM9FjH/gaP7CJ2',
+             oid_md5='ED0519339A219EC6418F3117EEE0CE38')
     # user = User.get('19374606')
     # bind_info(user)
 
-    # chongliuliang(User.get('19395206'))
+    # chongliuliang(User.get('19707918'))
+
+    # quick_bind_user()

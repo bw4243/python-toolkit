@@ -2,11 +2,12 @@ from distutils.core import setup
 
 setup(
     name='python_penkie',
-    version='',
-    packages=[''],
+    version='1.0.0',
+    packages=['shike','moneydb'],
     url='',
     license='',
     author='zhouzhipeng',
     author_email='',
-    description=''
+    description='',
+    py_modules=['myutils']
 )
