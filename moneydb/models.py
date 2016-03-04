@@ -53,6 +53,13 @@ class User(Base):
         return users
 
     @staticmethod
+    def fetch_all(app_type):
+        s = session()
+        users = s.query(User).filter(User.app_type == app_type).all()
+        s.close()
+        return users
+
+    @staticmethod
     def fetch_valid_one(user_id):
         s = session()
         user = s.query(User).filter(User.valuable == True, User.is_working == False, User.freeze_status == False,User.user_id == user_id).first()
