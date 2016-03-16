@@ -49,15 +49,26 @@ def get_user_finance(user):
 
 def has_money_up(user):
     """
-    余额是否增长了
+    试玩记录是否有该任务
     :return: True/False
     """
-    finance = get_user_finance(user)
-    if finance['history_income'] > user.total_income:
-        # 钱加上去了
-        user.total_income = finance['history_income']
-        return True
-    return False
+    content = 'start=0&length=1&is_stop=false&wechatMD5=%s&cur_time=%d' % (user.oid_md5, now_millisec())
+    resp = http_retry('http://i.appshike.com/itry/personalcenter/getDailyClickRecordList', method='POST',
+                      headers=get_header(user.cookie), body=content)
+
+    print(resp)
+
+    app_name = json.loads(resp)['list'][0].values()[0][0]['app_name']
+    print(app_name)
+
+
+
+    # finance = get_user_finance(user)
+    # if finance['history_income'] > user.total_income:
+    #     # 钱加上去了
+    #     user.total_income = finance['history_income']
+    #     return True
+    # return False
 
 
 def sync_user_info(user):
@@ -71,7 +82,7 @@ def sync_user_info(user):
     s.query(User).filter(User.id == user.id).update({
         User.balance: finance['can_withdrawal'],
         User.total_income: finance['history_income'],
-        User.today_income: finance['today_income'],
+        User.today_income: 0 if not finance['today_income'] else finance['today_income'],
         User.freeze_status: finance['user_status'] != '0'
     })
     s.commit()
@@ -247,7 +258,7 @@ def alipay_withdraw(user):
     elif balance >= 10:
         amount = 10
     content = 'flag=no_pass&pw=&bank=%s&money=%d&openid_md5=%s&total_income=%f&cur_time=%d' % (
-    user.field3, amount, user.oid_md5, user.total_income, now_millisec())
+        user.field3, amount, user.oid_md5, user.total_income, now_millisec())
     print(content)
     resp = http_retry('http://i.appshike.com/itry/income/withdraw_deposit', method='POST',
                       headers=get_header(user.cookie), body=content)
@@ -263,13 +274,29 @@ def withdraw_record(user):
     return resp
 
 
+def show_alipay(user):
+    content='wechatMD5=%s&cur_time=%d' % (user.oid_md5,now_millisec())
+    resp=http_retry('http://i.appshike.com/itry/personalcenter/showAlipay', method='POST',
+               headers=get_header(user.cookie), body=content)
+
+    print(resp)
+
+    obj=json.loads(resp)
+    if obj['success'] and obj.has_key('alipayList'):
+        return obj['alipayList'][0]
+    else:
+        return None
+
+
 if __name__ == '__main__':
-    add_user(user_id='19990285', nick_name=u'桃花',
-             cookie='OD=1YwkGJraimLZLZh6BNIG+H/5FJZ8YMhifp/hK/8iwBe7ncwODuTM9FjH/gaP7CJ2',
-             oid_md5='ED0519339A219EC6418F3117EEE0CE38')
+    # add_user(user_id='19990285', nick_name=u'桃花',
+    #          cookie='OD=1YwkGJraimLZLZh6BNIG+H/5FJZ8YMhifp/hK/8iwBe7ncwODuTM9FjH/gaP7CJ2',
+    #          oid_md5='ED0519339A219EC6418F3117EEE0CE38')
     # user = User.get('19374606')
     # bind_info(user)
 
     # chongliuliang(User.get('19707918'))
 
     # quick_bind_user()
+
+    print(show_alipay(User.get('19852541')))

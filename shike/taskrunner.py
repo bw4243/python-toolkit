@@ -54,6 +54,7 @@ def complete_task(user):
         # print(app['search_word'])
 
         appid = app['appid']
+        name = app['name']
         order_id = app['order_id']
         bundle_id = app['bundle_id'].encode("UTF-8")
         process_name = app['process_name'].encode("UTF-8")
@@ -83,6 +84,7 @@ def complete_task(user):
         task = Task(
             user_id=user.user_id,
             task_id=appid,
+            task_name=name,
             bundle_id=bundle_id,
             process_name=process_name,
             status=TASK_STATUS_WAIT,
@@ -194,11 +196,39 @@ def gen_task(user):
     # 修改user状态,加锁
     user.update_is_working(True)
 
+
     try:
         complete_task(user)
+
+        #更新用户信息
+        userinfo.sync_user_info(user)
+
+        # #更新支付宝绑定信息
+        # if not user.field3:
+        #     result=userinfo.show_alipay(user)
+        #     if result:
+
     except:
         user.update_is_working(False)
         logger.exception('shike gen_task error!')
+
+
+
+def has_task_completed(user,task):
+    """
+    试玩记录是否有该任务
+    :return: True/False
+    """
+    content='start=0&length=1&is_stop=false&wechatMD5=%s&cur_time=%d' % (user.oid_md5,now_millisec())
+    resp=http_retry('http://i.appshike.com/itry/personalcenter/getDailyClickRecordList',method='POST',headers=userinfo.get_header(user.cookie),body=content)
+
+    print(resp)
+
+    app_name=json.loads(resp)['list'][0].values()[0][0]['app_name']
+    print(app_name)
+
+    return task.task_name == app_name
+
 
 
 def run_task(user, task):
@@ -217,7 +247,7 @@ def run_task(user, task):
         upload_process_status(user, task)
         print_app_status(user, task)
         # 检查是否完成,并修改task和user状态
-        if userinfo.has_money_up(user):
+        if has_task_completed(user,task):
             # 可以终止了
             user.update_is_working(False)
             task.update_task_status(TASK_STATUS_COMPLETED)
