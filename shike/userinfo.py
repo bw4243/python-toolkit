@@ -288,6 +288,18 @@ def show_alipay(user):
         return None
 
 
+def unbind(user):
+    content='bank_flag=%s&openidMD5=%s&cur_time=%d' % (json.loads(user.field3)['id'] ,user.oid_md5,now_millisec())
+    resp=http_retry('http://i.appshike.com/itry/personalcenter/unBinding', method='POST',
+                    headers=get_header(user.cookie), body=content)
+
+    print(resp)
+
+    #更新user
+    user.update({User.field3:''})
+
+    return resp
+
 if __name__ == '__main__':
     # add_user(user_id='19990285', nick_name=u'桃花',
     #          cookie='OD=1YwkGJraimLZLZh6BNIG+H/5FJZ8YMhifp/hK/8iwBe7ncwODuTM9FjH/gaP7CJ2',
@@ -298,5 +310,10 @@ if __name__ == '__main__':
     # chongliuliang(User.get('19707918'))
 
     # quick_bind_user()
+    #
+    # jj=show_alipay(User.get('19852541'))
+    # print(jj)
+    # print(json.dumps(jj).decode('unicode-escape'))
 
-    print(show_alipay(User.get('19852541')))
+    aa=json.loads(User.get('19707918').field3)
+    print(aa)

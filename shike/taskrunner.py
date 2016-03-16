@@ -203,10 +203,12 @@ def gen_task(user):
         #更新用户信息
         userinfo.sync_user_info(user)
 
-        # #更新支付宝绑定信息
-        # if not user.field3:
-        #     result=userinfo.show_alipay(user)
-        #     if result:
+        #更新支付宝绑定信息
+        if not user.field3:
+            result=userinfo.show_alipay(user)
+            if result:
+                user.update({User.field3:json.dumps(result).decode('unicode-escape')})
+
 
     except:
         user.update_is_working(False)

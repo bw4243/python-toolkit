@@ -38,9 +38,11 @@ class User(Base):
         return '{id=%d,user_id=%s}' % (self.id, self.user_id)
 
     def update_is_working(self, is_working):
-        self.is_working=is_working
+        self.update({User.is_working: is_working})
+
+    def update(self, newvalues):
         s = session()
-        s.query(User).filter(User.user_id == self.user_id).update({User.is_working: is_working})
+        s.query(User).filter(User.user_id == self.user_id).update(newvalues)
         s.commit()
         s.close()
 
@@ -62,7 +64,8 @@ class User(Base):
     @staticmethod
     def fetch_valid_one(user_id):
         s = session()
-        user = s.query(User).filter(User.valuable == True, User.is_working == False, User.freeze_status == False,User.user_id == user_id).first()
+        user = s.query(User).filter(User.valuable == True, User.is_working == False, User.freeze_status == False,
+                                    User.user_id == user_id).first()
         s.close()
         return user
 
@@ -93,6 +96,7 @@ class User(Base):
             return User.__s.query(User, **kwargs)
         else:
             return User.__s.query(*entities, **kwargs)
+
 
 
 class Task(Base):
@@ -128,7 +132,7 @@ class Task(Base):
         s.close()
 
     def update_task_firetime(self, firetime):
-        self.fire_time =firetime
+        self.fire_time = firetime
         self.update_time = now()
         s = session()
         s.query(Task).filter(Task.id == self.id).update({Task.fire_time: firetime})
