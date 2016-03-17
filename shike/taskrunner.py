@@ -76,9 +76,15 @@ def complete_task(user):
         text = http_retry(url, method='POST', headers=userinfo.get_header(user.cookie), body=content)
         logger.info(text)
 
-        while text != '0':
+        count=5
+        while text != '0' and count>0:
+            count-=1
             logger.info("have not greped ,retry!")
             text = http_retry(url, method='POST', headers=userinfo.get_header(user.cookie), body=content)
+            logger.info(text)
+
+        if text != '0':
+            continue
 
         # 4.放入task表中,等待执行
         task = Task(
