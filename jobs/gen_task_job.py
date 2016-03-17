@@ -56,7 +56,7 @@ def run():
 
         # 因为linux的crontab只能一分钟执行一次,故需要多次循环执行以提高效率
         end_time = start_time = int(time.time())
-        while (end_time - start_time) < 55:
+        while (end_time - start_time) < 54:
             end_time = int(time.time())
             user = User.fetch_valid_one(args[1])
             if not user: break
@@ -64,7 +64,7 @@ def run():
             runner.gen_task(user)
             time.sleep(random.randint(2, 5))
 
-        user = User.fetch_valid_one(args[1])
+        user = User.get(args[1])
         if user:
             runner.after_run(user)
 
