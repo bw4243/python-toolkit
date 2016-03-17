@@ -295,15 +295,16 @@ def unbind(user):
 
     print(resp)
 
-    #更新user
-    user.update({User.field3:''})
+    if(json.loads(resp)['res']):
+        #更新user
+        user.update({User.field3:''})
 
     return resp
 
 if __name__ == '__main__':
-    # add_user(user_id='19990285', nick_name=u'桃花',
-    #          cookie='OD=1YwkGJraimLZLZh6BNIG+H/5FJZ8YMhifp/hK/8iwBe7ncwODuTM9FjH/gaP7CJ2',
-    #          oid_md5='ED0519339A219EC6418F3117EEE0CE38')
+    add_user(user_id='20852965', nick_name=u'中包',
+             cookie='OD=50dzdrQc6D60MfxaO8/U6abSPDqfk74lVKCgOBQb1K58j7DNMxb6u3H3tV0aa3Gg',
+             oid_md5='4C9CE942C42364770988EE5B51B08298')
     # user = User.get('19374606')
     # bind_info(user)
 
@@ -315,5 +316,5 @@ if __name__ == '__main__':
     # print(jj)
     # print(json.dumps(jj).decode('unicode-escape'))
 
-    aa=json.loads(User.get('19707918').field3)
-    print(aa)
+    # aa=json.loads(User.get('19707918').field3)
+    # print(aa)
