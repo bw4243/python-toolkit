@@ -64,6 +64,10 @@ def run():
             runner.gen_task(user)
             time.sleep(random.randint(2, 5))
 
+        user = User.fetch_valid_one(args[1])
+        if user:
+            runner.after_run(user)
+
         logger.info('gen_task_job[%s] speeds time: %ds' % (args[1], (end_time - start_time)))
     except:
         logger.exception('gen_task_job[%s]  errors!' % args[1])
