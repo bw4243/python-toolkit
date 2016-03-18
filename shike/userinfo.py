@@ -247,6 +247,9 @@ def quick_bind_user(cookie, url):
 
 
 def alipay_withdraw(user):
+    if not user.field3:
+        return 'field3 is empty!'
+
     balance = user.balance
     amount = 10
     if balance >= 100:
@@ -258,7 +261,7 @@ def alipay_withdraw(user):
     elif balance >= 10:
         amount = 10
     content = 'flag=no_pass&pw=&bank=%s&money=%d&openid_md5=%s&total_income=%f&cur_time=%d' % (
-        user.field3, amount, user.oid_md5, user.total_income, now_millisec())
+       json.loads(user.field3)['id'], amount, user.oid_md5, user.total_income, now_millisec())
     print(content)
     resp = http_retry('http://i.appshike.com/itry/income/withdraw_deposit', method='POST',
                       headers=get_header(user.cookie), body=content)
