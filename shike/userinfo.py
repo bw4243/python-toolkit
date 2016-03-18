@@ -177,8 +177,10 @@ def send_msg(user, mobile):
                       headers=get_header(user.cookie), body=content)
     print(resp)
 
+    return resp
 
-def bind_alipay(user, mobile, code):
+
+def bind_alipay(user, realname, accountname, mobile, code):
     '''
     绑定支付吧账户
     :param user:
@@ -186,12 +188,29 @@ def bind_alipay(user, mobile, code):
     :param code:
     :return:
     '''
-    content = 'bank_username=%s&vCode=%s&tel=%s&bank_num=%s&bank_flag=0&flag=%s&openidMD5=%s' % (
-        '%E5%91%A8%E5%BF%97%E9%B9%8F', code, mobile, 'admin%40zhouzhipeng.com', '%E6%94%AF%E4%BB%98%E5%AE%9D',
-        user.oid_md5)
+
+    if mobile and code:
+
+        content = 'bank_username=%s&vCode=%s&tel=%s&bank_num=%s&bank_flag=0&flag=%s&openidMD5=%s' % (
+            urllib.quote_plus(realname.encode('utf-8')), code, mobile, urllib.quote_plus(accountname),
+            '%E6%94%AF%E4%BB%98%E5%AE%9D',
+            user.oid_md5)
+    else:
+        content = 'bank_username=%s&bank_num=%s&bank_flag=0&flag=%s&openidMD5=%s' % (
+            urllib.quote_plus(realname.encode('utf-8')), urllib.quote_plus(accountname), '%E6%94%AF%E4%BB%98%E5%AE%9D',
+            user.oid_md5)
+
     resp = http_retry('http://i.appshike.com/itry/personalcenter/bindingBankNum', method='POST',
                       headers=get_header(user.cookie), body=content)
     print(resp)
+
+    if json.loads(resp)['res']:
+        # 更新user
+        result = show_alipay(user)
+        if result:
+            user.update({User.field3: json.dumps(result).decode('unicode-escape')})
+
+    return resp
 
 
 def quick_bind_user(cookie, url):
@@ -261,7 +280,7 @@ def alipay_withdraw(user):
     elif balance >= 10:
         amount = 10
     content = 'flag=no_pass&pw=&bank=%s&money=%d&openid_md5=%s&total_income=%f&cur_time=%d' % (
-       json.loads(user.field3)['id'], amount, user.oid_md5, user.total_income, now_millisec())
+        json.loads(user.field3)['id'], amount, user.oid_md5, user.total_income, now_millisec())
     print(content)
     resp = http_retry('http://i.appshike.com/itry/income/withdraw_deposit', method='POST',
                       headers=get_header(user.cookie), body=content)
@@ -278,13 +297,13 @@ def withdraw_record(user):
 
 
 def show_alipay(user):
-    content='wechatMD5=%s&cur_time=%d' % (user.oid_md5,now_millisec())
-    resp=http_retry('http://i.appshike.com/itry/personalcenter/showAlipay', method='POST',
-               headers=get_header(user.cookie), body=content)
+    content = 'wechatMD5=%s&cur_time=%d' % (user.oid_md5, now_millisec())
+    resp = http_retry('http://i.appshike.com/itry/personalcenter/showAlipay', method='POST',
+                      headers=get_header(user.cookie), body=content)
 
     print(resp)
 
-    obj=json.loads(resp)
+    obj = json.loads(resp)
     if obj['success'] and obj.has_key('alipayList'):
         return obj['alipayList'][0]
     else:
@@ -292,17 +311,31 @@ def show_alipay(user):
 
 
 def unbind(user):
-    content='bank_flag=%s&openidMD5=%s&cur_time=%d' % (json.loads(user.field3)['id'] ,user.oid_md5,now_millisec())
-    resp=http_retry('http://i.appshike.com/itry/personalcenter/unBinding', method='POST',
-                    headers=get_header(user.cookie), body=content)
+    content = 'bank_flag=%s&openidMD5=%s&cur_time=%d' % (json.loads(user.field3)['id'], user.oid_md5, now_millisec())
+    resp = http_retry('http://i.appshike.com/itry/personalcenter/unBinding', method='POST',
+                      headers=get_header(user.cookie), body=content)
 
     print(resp)
 
-    if(json.loads(resp)['res']):
-        #更新user
-        user.update({User.field3:''})
+    if (json.loads(resp)['res']):
+        # 更新user
+        user.update({User.field3: ''})
 
     return resp
+
+
+
+def get_user_info(user):
+    content = 'weChatMD5=%s&cur_time=%d' % (user.oid_md5, now_millisec())
+    resp = http_retry('http://i.appshike.com/itry/personalcenter/getUserFinance', method='POST',
+                      headers=get_header(user.cookie), body=content)
+
+    print(resp)
+
+    return json.loads(resp)
+
+
+
 
 if __name__ == '__main__':
     add_user(user_id='20852965', nick_name=u'中包',

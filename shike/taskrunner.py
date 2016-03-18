@@ -215,10 +215,10 @@ def after_run(user):
     userinfo.sync_user_info(user)
 
     #更新支付宝绑定信息
-    if not user.field3:
-        result=userinfo.show_alipay(user)
-        if result:
-            user.update({User.field3:json.dumps(result).decode('unicode-escape')})
+    # if not user.field3:
+    #     result=userinfo.show_alipay(user)
+    #     if result:
+    #         user.update({User.field3:json.dumps(result).decode('unicode-escape')})
 
 
 def has_task_completed(user,task):
