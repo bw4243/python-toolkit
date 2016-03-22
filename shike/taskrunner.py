@@ -35,7 +35,7 @@ def applist(user):
                         Cache-Control: no-cache
                         DNT: 1
                       ''' % user.cookie))
-    logger.info(resp.decode('UTF-8'))
+    # logger.info(resp.decode('UTF-8'))
 
     list = json.loads(resp)
 
@@ -44,6 +44,8 @@ def applist(user):
 
 def complete_task(user):
     task_list = applist(user)
+
+    logger.info(task_list)
     if len(task_list) == 0:
         user.update_is_working(False)
         return
