@@ -26,13 +26,14 @@ def applist(user):
                         Accept-Language: zh-CN,zh;q=0.8,en;q=0.6
                         Connection: keep-alive
                         Content-Type: application/x-www-form-urlencoded; charset=UTF-8
-                        Cookie: JSESSIONID=6DEC5C3BD071AEF96867F511FA686F2C;%s
+                        Cookie: JSESSIONID=6DEC5C3BD071AEF96867F511FA686F2C;aliyungf_tc=AQAAAFIbwmV0ZgMABoSZtMD3aN3xR5rI;%s
                         Host: i.appshike.com
                         Origin: http://i.appshike.com
-                        Referer:http://i.appshike.com/shike/appList?t=1456368417703
+                        Referer:http://i.appshike.com/shike/appList
                         User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1
                         X-Requested-With: XMLHttpRequest
                         Cache-Control: no-cache
+                        DNT: 1
                       ''' % user.cookie))
     logger.info(resp.decode('UTF-8'))
 
@@ -279,3 +280,10 @@ def run_task(user, task):
     except:
         logger.exception('shike run_task error! ')
         task.update_task_status(TASK_STATUS_WAIT)
+
+
+if  __name__ == '__main__':
+    user=User.get('20852965')
+    # print(applist(User.get('21101999')))
+    # xb_online(user)
+    print(applist(user))

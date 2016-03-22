@@ -16,7 +16,7 @@ def get_header(cookie):
         Accept-Language:zh-CN,zh;q=0.8,en;q=0.6
         Connection:keep-alive
         Content-Type:application/x-www-form-urlencoded; charset=UTF-8
-        Cookie:%s
+        Cookie:IORI="U4PnbGRa1GaPvkIYgZJHQIdKxhIpQOMKLsr5OQnC6VNxOzgUmcQb6GcKQ7OUrXU0Lx4F6xzM3oOEG1q+OmZ5i8A6+yyKq2p404Hv2Mmxy0k=";JSESSIONID=13F6C68B7230EBB40BFE2ABF2CAB3FCA;aliyungf_tc=AQAAAHCQ8RWFjwAABoSZtGkpQGArcH5J; %s
         Host:i.appshike.com
         Origin:http://i.appshike.com
         User-Agent:Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1
