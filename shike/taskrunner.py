@@ -232,15 +232,20 @@ def has_task_completed(user,task):
     试玩记录是否有该任务
     :return: True/False
     """
-    content='start=0&length=1&is_stop=false&wechatMD5=%s&cur_time=%d' % (user.oid_md5,now_millisec())
-    resp=http_retry('http://i.appshike.com/itry/personalcenter/getDailyClickRecordList',method='POST',headers=userinfo.get_header(user.cookie),body=content)
 
-    print(resp)
+    try:
+        content='start=0&length=1&is_stop=false&wechatMD5=%s&cur_time=%d' % (user.oid_md5,now_millisec())
+        resp=http_retry('http://i.appshike.com/itry/personalcenter/getDailyClickRecordList',method='POST',headers=userinfo.get_header(user.cookie),body=content)
 
-    app_name=json.loads(resp)['list'][0].values()[0][0]['app_name']
-    print(app_name)
+        print(resp)
 
-    return task.task_name == app_name
+        app_name=json.loads(resp)['list'][0].values()[0][0]['app_name']
+        print(app_name)
+
+        return task.task_name == app_name
+    except:
+        logger.exception('has_task_completed[%s]  errors!' % user.user_id)
+        return False
 
 
 

@@ -23,3 +23,6 @@ def run():
     request = IP(src=random.choice(SOURCE), dst=domain) / TCP(dport=5000) / http
     resp=send(request)
     print(resp)
+
+if __name__ == '__main__':
+    run()

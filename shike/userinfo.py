@@ -337,7 +337,7 @@ def get_user_info(user):
 
 
 def mdm2suc(cookie):
-    http_retry('http://i.appshike.com/itry/mdm2suc?random=Ee2uDXb2WzBGH05dxTDnOoe91VzYRQTKUo%2BCNhbydjqEMh9PY8Ht2BUSoa1knIMUwad6BazU_PiJboroRg1YEA%3D%3D',headers=get_header(user.cookie),no_retry=True)
+    http_retry('http://i.appshike.com/itry/mdm2suc?random=Ee2uDXb2WzBGH05dxTDnOoe91VzYRQTKUo%2BCNhbydjqEMh9PY8Ht2BUSoa1knIMUwad6BazU_PiJboroRg1YEA%3D%3D',headers=get_header(cookie),no_retry=True)
     cookie_array=http_retry('http://i.appshike.com/shike/appList',headers=get_header(cookie),return_headers=True)[0]
     for cc in cookie_array:
         if cc[0]=='set-cookie':
