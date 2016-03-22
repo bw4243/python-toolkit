@@ -16,7 +16,7 @@ def get_header(cookie):
         Accept-Language:zh-CN,zh;q=0.8,en;q=0.6
         Connection:keep-alive
         Content-Type:application/x-www-form-urlencoded; charset=UTF-8
-        Cookie:IORI="U4PnbGRa1GaPvkIYgZJHQIdKxhIpQOMKLsr5OQnC6VNxOzgUmcQb6GcKQ7OUrXU0Lx4F6xzM3oOEG1q+OmZ5i8A6+yyKq2p404Hv2Mmxy0k=";JSESSIONID=13F6C68B7230EBB40BFE2ABF2CAB3FCA;aliyungf_tc=AQAAAHCQ8RWFjwAABoSZtGkpQGArcH5J; %s
+        Cookie:JSESSIONID=EA43B9A1BA428F3F846473A134BA2E93; aliyungf_tc=AQAAAHCQ8RWFjwAABoSZtGkpQGArcH5J;%s
         Host:i.appshike.com
         Origin:http://i.appshike.com
         User-Agent:Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1
@@ -115,6 +115,7 @@ def bind_info(user):
 
 
 def add_user(user_id, nick_name, cookie, oid_md5):
+    cookie=mdm2suc(cookie)+';'+ cookie
     user = User(
         user_id=user_id,
         nick_name=nick_name,
@@ -335,12 +336,25 @@ def get_user_info(user):
     return json.loads(resp)
 
 
+def mdm2suc(cookie):
+    http_retry('http://i.appshike.com/itry/mdm2suc?random=Ee2uDXb2WzBGH05dxTDnOoe91VzYRQTKUo%2BCNhbydjqEMh9PY8Ht2BUSoa1knIMUwad6BazU_PiJboroRg1YEA%3D%3D',headers=get_header(user.cookie),no_retry=True)
+    cookie_array=http_retry('http://i.appshike.com/shike/appList',headers=get_header(cookie),return_headers=True)[0]
+    for cc in cookie_array:
+        if cc[0]=='set-cookie':
+            return cc[1].split(';')[0]
+    return None
 
 
 if __name__ == '__main__':
-    add_user(user_id='20852965', nick_name=u'中包',
-             cookie='OD=50dzdrQc6D60MfxaO8/U6abSPDqfk74lVKCgOBQb1K58j7DNMxb6u3H3tV0aa3Gg',
-             oid_md5='4C9CE942C42364770988EE5B51B08298')
+    # print(mdm2suc(User.get('19884486')))
+
+    for user in User.fetch_all('xiao_bin'):
+        user.update({User.cookie:mdm2suc(user.cookie)+';'+user.cookie})
+
+
+    # add_user(user_id='20852965', nick_name=u'中包',
+    #          cookie='OD=50dzdrQc6D60MfxaO8/U6abSPDqfk74lVKCgOBQb1K58j7DNMxb6u3H3tV0aa3Gg',
+    #          oid_md5='4C9CE942C42364770988EE5B51B08298')
     # user = User.get('19374606')
     # bind_info(user)
 

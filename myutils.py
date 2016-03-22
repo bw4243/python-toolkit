@@ -149,7 +149,7 @@ def headers_from_str(str, spliter='\n'):
     return headers
 
 
-def http_retry(url, method='GET', headers={}, body=None, return_headers=False):
+def http_retry(url, method='GET', headers={}, body=None, return_headers=False,no_retry=False):
     proto, rest = urllib.splittype(url)
     host, rest = urllib.splithost(rest)
 
@@ -159,7 +159,7 @@ def http_retry(url, method='GET', headers={}, body=None, return_headers=False):
         response = conn.getresponse()
         status = response.status
 
-        while status != 200:
+        while status != 200 and not no_retry:
             logger.debug("http_retry status:%d" % status)
             logger.debug("http_retry :%s" % url)
             conn = httplib.HTTPConnection(host)

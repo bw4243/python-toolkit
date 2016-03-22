@@ -216,7 +216,7 @@ def after_run(user):
     userinfo.sync_user_info(user)
 
     #0.小兵在线
-    xb_online(user)
+    # xb_online(user)
 
     #更新支付宝绑定信息
     # if not user.field3:
@@ -283,7 +283,11 @@ def run_task(user, task):
 
 
 if  __name__ == '__main__':
-    user=User.get('20852965')
-    # print(applist(User.get('21101999')))
-    # xb_online(user)
-    print(applist(user))
+    # user=User.get('20852965')
+    # # print(applist(User.get('21101999')))
+    # # xb_online(user)
+    # print(applist(user))
+
+    for u in User.fetch_all('xiao_bin'):
+        result=http_retry('http://i.appshike.com/shike/appList',headers=userinfo.get_header(u.cookie),return_headers=True)
+        headers=result[0]
