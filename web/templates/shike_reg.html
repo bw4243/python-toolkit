@@ -4,55 +4,79 @@
     <meta charset="UTF-8">
     <title>试客小兵注册流程</title>
     <style type="text/css">
-        div{
-            margin:5px
+        div {
+            margin: 5px
         }
     </style>
 
     <script type="text/javascript" src="../static/jquery-1.8.3.min.js"></script>
     <script type="text/javascript">
-        var token=null;
-        var num=10;
-        var totalCount=10;
-        function shenhua_login(){
-            $.get('/shenhua_login',function(data){
+        var token = null;
+        var num = 10;
+        var totalCount = 10;
+        function shenhua_login() {
+            $.get('/shenhua_login', function (data) {
                 $("#sessionval").html(data);
-                token=data;
+                token = data;
             });
         }
 
-        function  getPhones(){
-            num=$("#numinput").val();
-            $.get('/get_phones',{'token':token,'num':num},function(data){
+        function getPhones() {
+            num = $("#numinput").val();
+            $.get('/get_phones', {'token': token, 'num': num}, function (data) {
                 $("#phonestext").html(data);
             });
         }
 
-        function listenMsg(){
+        function listenMsg() {
             $("#msg").html('');
-            $.get('/get_msg',{'token':token,'phone':$("#phoneInput").val()},function(data){
+            $.get('/get_msg', {'token': token, 'phone': $("#phoneInput").val()}, function (data) {
                 $("#msg").html(data);
                 totalCount--;
 
-                if(totalCount<=0){
+                if (totalCount <= 0) {
                     $("#msg").html('没有收到短信!');
                 }
 
-                if(data.indexOf('False')!=-1&&totalCount>0){
+                if (data.indexOf('False') != -1 && totalCount > 0) {
 
-                    setTimeout(listenMsg,5000);
-                }else{
-                    totalCount=10;
+                    setTimeout(listenMsg, 5000);
+                } else {
+                    totalCount = 10;
                 }
             });
         }
 
-        function bindUser(){
-            $.get('/bind_user',{'cookie':$("#cookieinput").val(),'url':$("#urlinput").val()},function(data){
+        function bindUser() {
+            $.get('/bind_user', {
+                'cookie': $("#cookieInput").val(),
+                'userid': $("#useridInput").val(),
+                'nick_name': $("#nick_nameInput").val(),
+                'oid_md5': $("#oid_md5Input").val()
+            }, function (data) {
                 alert(data);
                 $("#cookieinput").val('');
                 $("#urlinput").val('');
             });
+        }
+
+
+        function parseCookie(text) {
+            setTimeout(function () {
+                $("#cookieInput").val('OD='+$("#cookieinput").val().split('\t')[1])
+            }, 200);
+        }
+
+        function parseOthers(text) {
+            setTimeout(function () {
+                $.get("/parse_others", {'text': $("#urlinput").val()}, function (data) {
+                    console.log(data)
+                    arr=data.split(',')
+                    $("#useridInput").val(arr[1]);
+                    $("#nick_nameInput").val(arr[0]);
+                    $("#oid_md5Input").val(arr[2]);
+                })
+            }, 20);
         }
 
 
@@ -84,22 +108,43 @@
     </div>
 
     <p>4. 关注公众号,点"开始赚钱"</p>
+
     <div>
         <img src="../static/image/shike.png">
     </div>
 
     <p>5. 绑定用户</p>
+
     <div>
         <div>
-            cookie:
-            <input type="text" id="cookieinput">
+            <div>解析区</div>
+            <div>
+                cookie:
+                <input type="text" id="cookieinput" onpaste="parseCookie(this.value)">
+            </div>
+            <div>
+                url/html:
+                <input type="text" id="urlinput" onpaste="parseOthers(this.value)">
+            </div>
         </div>
         <div>
-            url:
-            <input type="text" id="urlinput">
+
+            <div>数据区</div>
+            <div>
+                userid:<input type="text" id="useridInput">
+            </div>
+            <div>
+                nick_name:<input type="text" id="nick_nameInput">
+            </div>
+            <div>
+                cookie:<input type="text" id="cookieInput">
+            </div>
+            <div>
+                oid_md5:<input type="text" id="oid_md5Input">
+            </div>
         </div>
         <div>
-            <input   type="button" value="绑定用户" onclick="bindUser()">
+            <input type="button" value="绑定用户" onclick="bindUser()">
         </div>
     </div>
 </div>

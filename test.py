@@ -71,18 +71,36 @@ def migrate():
             activity['Tab2Topic'] = '["18683"]'
             activity['Tab3Topic'] = '["18684"]'
 
-
-
         row = format_str % activity
 
         print(row)
 
         insert_sql += row + '\n'
 
-    insert_sql = prefix_sql + insert_sql[:-2]+';'
+    insert_sql = prefix_sql + insert_sql[:-2] + ';'
 
     print(insert_sql)
 
-    open('/Users/zhouzhipeng/Documents/20160308-领券模板二期/migrate_data.sql','w').write(insert_sql.encode("UTF-8"))
+    open('/Users/zhouzhipeng/Documents/20160308-领券模板二期/migrate_data.sql', 'w').write(insert_sql.encode("UTF-8"))
 
-migrate()
+
+# migrate()
+
+
+def mig2(name):
+    sql = '''
+    INSERT INTO `BeautyCouponCount` (`ShopId`, `SendCount`, `SendTime`, `AddTime`, `UpdateTime`, `SendType`, `TotalCount`, `ContractID`)
+VALUES
+	(%(ShopId)d, %(SendCount)d, '%(SendTime)s', '%(AddTime)s', '%(UpdateTime)s', %(SendType)d, %(TotalCount)d,  %(ContractID)d);
+    '''
+
+    list = json.loads(open('/Users/zhouzhipeng/Documents/20160318-couponcout数据迁移/%s.json'  % name).read())['data']
+
+    ss=''
+    for obj in list:
+        ss+=sql % obj
+    print(len(list))
+    open('/Users/zhouzhipeng/Documents/20160318-couponcout数据迁移/%s.sql' % name,'w').write(ss)
+
+# mig2('13')
+mig2('14')

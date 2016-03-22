@@ -246,6 +246,9 @@ def run_task(user, task):
     :return:
     """
 
+    #0.小兵在线
+    xb_online(user)
+
     # 1.修改task状态,防止其他job访问
     task.update_task_status(TASK_STATUS_DOING)
 
