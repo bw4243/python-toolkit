@@ -214,6 +214,9 @@ def after_run(user):
     #更新用户信息
     userinfo.sync_user_info(user)
 
+    #0.小兵在线
+    xb_online(user)
+
     #更新支付宝绑定信息
     # if not user.field3:
     #     result=userinfo.show_alipay(user)
@@ -246,8 +249,6 @@ def run_task(user, task):
     :return:
     """
 
-    #0.小兵在线
-    xb_online(user)
 
     # 1.修改task状态,防止其他job访问
     task.update_task_status(TASK_STATUS_DOING)
