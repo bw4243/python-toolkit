@@ -20,9 +20,16 @@ def run():
 
     domain = '127.0.0.1'
     http = HTTPSTR % (domain, random.choice(USER_AGENTS))
-    request = IP(src=random.choice(SOURCE), dst=domain) / TCP(dport=5000) / http
+    sip=random.choice(SOURCE)
+    print(sip)
+    request = IP(src=sip, dst=domain) / TCP(dport=5000) / http
     resp=send(request)
     print(resp)
 
 if __name__ == '__main__':
     run()
+    #
+    # result,unanswered=sr(IP(dst="www.baidu.com",ttl=(5,10))/ICMP())
+    #
+    # print(result)
+    # print(unanswered)

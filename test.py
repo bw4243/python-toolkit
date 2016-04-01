@@ -8,7 +8,6 @@ import urllib
 from myutils import *
 
 
-
 #
 # list = json.loads(http_retry('http://meta.open.dp/metadata/city/all'))
 # map = {}
@@ -44,8 +43,9 @@ def print_cityids():
     map = {}
     for city in list:
         map[city['cityName']] = city['cityID']
-    cityids=''
-    for cityname in u'鞍山 保定 北京 常州 成都 大连 东莞 佛山 福州 抚顺 广州 贵阳 哈尔滨 杭州 合肥 呼和浩特 惠州 济南 嘉兴 昆明 昆山 兰州 临沂 洛阳 南昌 南京 南宁 南通 宁波 青岛 泉州 厦门 上海 绍兴 深圳 沈阳 石家庄 苏州 台州 太原 泰州 唐山 天津 潍坊 温州 无锡 武汉 西安 襄阳 徐州 烟台 扬州 宜昌 义乌 银川 长春 长沙 镇江 郑州 中山 重庆 珠海 淄博'.split(' '):
+    cityids = ''
+    for cityname in u'鞍山 保定 北京 常州 成都 大连 东莞 佛山 福州 抚顺 广州 贵阳 哈尔滨 杭州 合肥 呼和浩特 惠州 济南 嘉兴 昆明 昆山 兰州 临沂 洛阳 南昌 南京 南宁 南通 宁波 青岛 泉州 厦门 上海 绍兴 深圳 沈阳 石家庄 苏州 台州 太原 泰州 唐山 天津 潍坊 温州 无锡 武汉 西安 襄阳 徐州 烟台 扬州 宜昌 义乌 银川 长春 长沙 镇江 郑州 中山 重庆 珠海 淄博'.split(
+            ' '):
         cityids += str(map[cityname]) + ','
     #
     print(cityids)
@@ -108,15 +108,25 @@ VALUES
 	(%(ShopId)d, %(SendCount)d, '%(SendTime)s', '%(AddTime)s', '%(UpdateTime)s', %(SendType)d, %(TotalCount)d,  %(ContractID)d);
     '''
 
-    list = json.loads(open('/Users/zhouzhipeng/Documents/20160318-couponcout数据迁移/%s.json'  % name).read())['data']
+    list = json.loads(open('/Users/zhouzhipeng/Documents/20160318-couponcout数据迁移/%s.json' % name).read())['data']
 
-    ss=''
+    ss = ''
     for obj in list:
-        ss+=sql % obj
+        ss += sql % obj
     print(len(list))
-    open('/Users/zhouzhipeng/Documents/20160318-couponcout数据迁移/%s.sql' % name,'w').write(ss)
+    open('/Users/zhouzhipeng/Documents/20160318-couponcout数据迁移/%s.sql' % name, 'w').write(ss)
+
+
+def send_push():
+    data = ('-8458788633886141025', 'dianping://web?sdfsf', 'testtt2')
+    content = 'url=campaign.service.couponCommonService&method=sendAppPush&parameterTypes=java.lang.String&parameters=%s&parameterTypes=java.lang.String&parameters=%s&parameterTypes=java.lang.String&parameters=%s' % data
+    resp = http_retry('http://10.1.105.166:4080/invoke.json?' + content, no_retry=True)
+    print(resp)
+
 
 # mig2('13')
-# mig2('14')
+# mig2('1500_2')
 
-print_cityids()
+# print_cityids()
+
+send_push()

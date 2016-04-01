@@ -159,13 +159,15 @@ def http_retry(url, method='GET', headers={}, body=None, return_headers=False,no
         response = conn.getresponse()
         status = response.status
 
-        while status != 200 and not no_retry:
+        max_retry_count=3
+        while status != 200 and not no_retry and max_retry_count>0:
             logger.debug("http_retry status:%d" % status)
             logger.debug("http_retry :%s" % url)
             conn = httplib.HTTPConnection(host)
             conn.request(method=method, url=url, headers=headers, body=body)
             response = conn.getresponse()
             status = response.status
+            max_retry_count-=1
 
         resp = response.read()
         conn.close()

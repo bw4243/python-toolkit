@@ -144,8 +144,8 @@ def log_download_xb(user):
                            headers=get_header(user.cookie)))
 
 
-def chongliuliang(user):
-    '''
+def chongliuliang_liantong(user,mobile):
+    a=''' 中国联通
     0: {sellingPrice: "3", shopProductName: "联通全国20M", shopProductId: "000000004d9f2a6d014db6e97a2300cf"}
     1: {sellingPrice: "6", shopProductName: "联通全国50M", shopProductId: "000000004cdff715014ce05ff5d70000"}
     2: {sellingPrice: "9.5", shopProductName: "联通全国100M", shopProductId: "000000004d9f2a6d014db6ea579400ef"}
@@ -153,11 +153,12 @@ def chongliuliang(user):
     4: {sellingPrice: "28", shopProductName: "联通全国500M", shopProductId: "000000004d9f2a6d014db6ec9e29010f"}
     '''
 
+
     liuliangset = {
 
     }
-    content = 'product=%s&czPhone=18521058664&oidMd5=%s&catName=%s&option=0' % (
-        '000000004cdff715014ce05ff5d70000', user.oid_md5,
+    content = 'product=%s&czPhone=%s&oidMd5=%s&catName=%s&option=0' % (
+        '000000004d9f2a6d014db6ec9e29010f',mobile, user.oid_md5,
         '%25E4%25B8%25AD%25E5%259B%25BD%25E8%2581%2594%25E9%2580%259A')
     resp = http_retry('http://i.appshike.com/itry/liuliangchongzhi/getLiuliangCz', method='POST',
                       headers={'cookie': user.cookie,
@@ -165,6 +166,33 @@ def chongliuliang(user):
 
     print(resp)
 
+
+def chongliuliang_yidong(user,mobile):
+    b=''' 中国移动
+        {sellingPrice: "3", shopProductName: "移动全国10M", shopProductId: "000000004d23c6ef014d2847799b0023"}
+        {sellingPrice: "5", shopProductName: "移动全国30M", shopProductId: "000000004d23c6ef014d28481c4a0025"}
+        {sellingPrice: "8", shopProductName: "移动全国70M", shopProductId: "000000004d23c6ef014d2848b58c0027"}
+        {sellingPrice: "16", shopProductName: "移动全国150M", shopProductId: "000000004d23c6ef014d284a17660029"}
+        {sellingPrice: "23", shopProductName: "移动全国500M", shopProductId: "000000004d23c6ef014d284a913a002b"}
+        {sellingPrice: "38", shopProductName: "移动全国1G", shopProductId: "000000004d56e353014d6ae8c7470021"}
+        {sellingPrice: "53", shopProductName: "移动全国2G", shopProductId: "000000004e3cba65014e43997fb3006e"}
+        {sellingPrice: "80", shopProductName: "移动全国3G", shopProductId: "000000004e3cba65014e439a2fe1008e"}
+        {sellingPrice: "100", shopProductName: "移动全国4G", shopProductId: "000000004e3cba65014e439ae26900ae"}
+        {sellingPrice: "150", shopProductName: "移动全国6G", shopProductId: "000000004e3cba65014e439b77ea00ce"}
+        {sellingPrice: "250", shopProductName: "移动全国11G", shopProductId: "000000004e3cba65014e439c01aa00ee"}
+    '''
+
+    liuliangset = {
+
+    }
+    content = 'product=%s&czPhone=%s&oidMd5=%s&catName=%s&option=0' % (
+        '000000004d23c6ef014d284a913a002b',mobile, user.oid_md5,
+        '%E4%B8%AD%E5%9B%BD%E7%A7%BB%E5%8A%A8')
+    resp = http_retry('http://i.appshike.com/itry/liuliangchongzhi/getLiuliangCz', method='POST',
+                      headers={'cookie': user.cookie,
+                               'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}, body=content)
+
+    print(resp)
 
 def send_msg(user, mobile):
     '''
@@ -348,8 +376,8 @@ def mdm2suc(cookie):
 if __name__ == '__main__':
     # print(mdm2suc(User.get('19884486')))
 
-    for user in User.fetch_all('xiao_bin'):
-        user.update({User.cookie:mdm2suc(user.cookie)+';'+user.cookie})
+    # for user in User.fetch_all('xiao_bin'):
+    #     user.update({User.cookie:mdm2suc(user.cookie)+';'+user.cookie})
 
 
     # add_user(user_id='20852965', nick_name=u'中包',
@@ -368,3 +396,13 @@ if __name__ == '__main__':
 
     # aa=json.loads(User.get('19707918').field3)
     # print(aa)
+
+    # chongliuliang(User.get('19884137'),'18217681078')
+
+    # 充流量
+    # chongliuliang_liantong(User.get('19988971'),'18521058664')
+    # chongliuliang_yidong(User.get('19988971'),'18217681078')
+    chongliuliang_yidong(User.get('19988971'),'13554436970')  # 张玲
+    #
+    # chongliuliang_liantong(User.get('19988971'),'15623474689')# 张玲
+
