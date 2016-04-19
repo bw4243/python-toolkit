@@ -178,7 +178,6 @@ def http_retry(url, method='GET', headers={}, body=None, return_headers=False,no
         return resp
     except:
         logger.exception("http_retry error")
-        return http_retry(url, method, headers, body, return_headers)
 
 
 if __name__ == '__main__':

@@ -29,6 +29,13 @@ def print_cityids():
 
 
 def send_push(dpid, link, text):
+    """
+    发push
+    :param dpid:
+    :param link:
+    :param text:
+    :return:
+    """
     # beauty-campaign-service
     content = 'url=campaign.service.couponCommonService&method=sendAppPush&parameterTypes=java.lang.String&parameters=%s&parameterTypes=java.lang.String&parameters=%s&parameterTypes=java.lang.String&parameters=%s' % (
         dpid, link, text)
@@ -36,13 +43,142 @@ def send_push(dpid, link, text):
 
 
 def get_dpid_from_userid(userid):
+    """
+    从userid查询dpid
+    :param userid:
+    :return:
+    """
     # data-server
-    content = 'url=http://service.dianping.com/dpdata/dpredis&method=get&parameterTypes=java.lang.String&parameters=bi.dprpt_userid_dpid_map.dim&parameterTypes=java.lang.String&parameters=%s' % str(userid)
-    resp=http_retry('http://10.1.106.205:4080/invoke.json?' + content)
+    # content = 'url=http://service.dianping.com/dpdata/dpredis&method=get&parameterTypes=java.lang.String&parameters=bi.dprpt_userid_dpid_map.dim&parameterTypes=java.lang.String&parameters=%s' % str(userid)
+    # resp=http_retry('http://10.1.106.205:4080/invoke.json?' + content)
+
+    content = 'url=http://service.dianping.com/dpdata/dpuser&method=getUserDpidByUserid&parameterTypes=int&parameters=%s' % (
+        userid)
+    resp = http_retry('http://10.1.111.112:4080/invoke.json?' + content)
     print(resp)
     return resp
+
+
+def test():
+    ss = u"""
+    获得了大众点评丽人88元礼包！
+    获得了西十区1000元礼包！
+    获得了小红书66元礼包！
+    获得了唯品会188元礼包！
+    获得了大众点评电影5元礼包！
+    获得了大众点评酒店30元礼包！
+    获得了西堤厚牛排30元礼包！
+    获得了价值599元Dior香水！
+    获得了马上诺30元礼包！
+    """
+    arr = ss.split('\n')
+    print(arr)
+    name = [u'大', 'B', u'感', u'西', u'萌', u'小', u'啦', u'萝', u'绿', u'咻', u'云', u'想', u'么', 'A', 'C', 'D', 'E', 'F', 'G',
+            'H', 'I', 'J', 'L', 'M', 'N', 'O']
+    for i in range(200):
+        print(name[random.randint(0, len(name) - 1)] + '**' + name[random.randint(0, len(name) - 1)] + arr[
+            random.randint(1, len(arr) - 2)])
+
+
+def youhuicuxiao(accountId, contractID, beginTime, endTime, productId, shopId, itemId):
+    """
+    优惠促销补数据
+    :return:
+    """
+
+    privilegeDto = {'orderSource': 0, 'accountId': accountId, 'extOrderId': contractID}
+    privilegeitemDto = [
+        {'beginTime': beginTime, 'endTime': endTime, 'productId': productId, 'shopId': shopId, 'itemId': itemId}]
+
+    privilegeDto['shtPrivilegeItemDtos'] = privilegeitemDto
+
+    jsonStr = urllib.quote(json.dumps(privilegeDto))
+
+    print(jsonStr)
+
+    content = 'url=http://service.dianping.com/mercahntShopdiyPrivilegeService/shtBaseFunctionService_1.0.0&method=addShtPrivilege&parameterTypes=com.dianping.merchant.shopdiy.privilege.api.dto.ShtPrivilegeDto&parameters=%s' % jsonStr
+
+    print(content)
+
+    resp = http_retry('http://merchant-shopdiy-privilege-service02.nh:4080/invoke.json?' + content)
+    print(resp)
+    return resp
+
+
+def set_cache(category, params, value):
+    """
+    设置缓存值
+    :param category:
+    :param params:
+    :param value:
+    :return:
+    """
+    content = 'url=campaign.service.configService&method=setCache&parameterTypes=java.lang.String&parameters=%s&parameterTypes=[Ljava.lang.Object;&parameters=%s&parameterTypes=java.lang.Object&parameters=%s' % (
+        category, str(params), value)
+    print(content)
+    resp = http_retry('http://beauty-campaign-service01.beta:4080/invoke.json?' + content)
+    print(resp)
+
+
+def get_cache(category, params):
+    """
+    获取缓存值
+    :param category:
+    :param params:
+    :return:
+    """
+    content = 'url=campaign.service.configService&method=getCache&parameterTypes=java.lang.String&parameters=%s&parameterTypes=[Ljava.lang.Object;&parameters=%s' % (
+        category, str(params) )
+    print(content)
+    resp = http_retry('http://beauty-campaign-service01.beta:4080/invoke.json?' + content)
+    print(resp)
+    return resp
+
+
+def is_new_user(userid, sort_type='site', mobile='', dpid='',beta=False):
+    """
+    判断是否是某平台新用户
+    :param userid:
+    :param sort_type: site-全站,bu50-丽人
+    :param mobile:
+    :param dpid:
+    :return:
+    """
+
+    servers=['dpuser-service01.beta','dpuser-service04.nh']
+
+    content = 'url=http://service.dianping.com/dpdata/dpuser&method=isFirstBuyUser&parameterTypes=java.lang.String&parameters=%s&parameterTypes=java.lang.String&parameters=%s&parameterTypes=java.lang.String&parameters=%s&parameterTypes=java.lang.String&parameters=%s' % (
+        userid, sort_type, mobile, dpid)
+    print(content)
+    resp = http_retry('http://%s:4080/invoke.json?%s'% (servers[beta], content))
+    print(resp)
+    return resp
+
 
 if __name__ == '__main__':
     # send_push('-8458788633886141025', 'dianping://web?sdfsf', 'testtt2')
 
-    get_dpid_from_userid(183500170)
+    # get_dpid_from_userid(183500170)
+
+    # test()
+
+    # youhuicuxiao(2678263,9273004,"2016-01-11T00:00:00.000+0800","2016-07-10T23:59:59.000+0800",111563,27268917,11256572)
+
+    # youhuicuxiao(5122050, 9272877, '2016-03-21T00:00:00.000+0800', '2016-09-20T23:59:59.000+0800', 111563, 45570986,
+    #              11255918);
+
+
+    # get_cache('BeautyFestivalUserGameInfo', [1])
+    # set_cache('BeautyFestivalUserGameInfo',[1],'{"id":10012}')
+    # get_cache('BeautyFestivalUserGameInfo', [1])
+
+    # is_new_user('9149','c135',beta=True)
+
+
+    get_cache('BeautyBigsaleParticipant', '["global"]')
+
+    # set_cache('BeautyBigsaleParticipant', '["global"]',120000)
+    # get_cache('BeautyBigsaleParticipant', '["global"]')
+
+
+

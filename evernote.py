@@ -304,7 +304,7 @@ __session_cookie = __login()
 
 # test
 if __name__ == '__main__':
-    createFileNote('图片笔记66666', '/Users/zhouzhipeng/Downloads/season_img_bigbanner_1_3.jpg')
+    # createFileNote('图片笔记66666', '/Users/zhouzhipeng/Downloads/season_img_bigbanner_1_3.jpg')
 
-    createPlainNote("abbbba",
+    createPlainNote("test",
                     '<div><br><img src="https://app.yinxiang.com/shard/s60/res/8b8cdff8-b0aa-4bd6-be9e-1d5bb036e0ce/season_img_bigbanner_1_1.jpg" alt="" name="8b8cdff8-b0aa-4bd6-be9e-1d5bb036e0ce" class="en-media" data-mce-src="https://app.yinxiang.com/shard/s60/res/8b8cdff8-b0aa-4bd6-be9e-1d5bb036e0ce/season_img_bigbanner_1_1.jpg"></div>')

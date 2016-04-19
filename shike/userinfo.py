@@ -400,9 +400,10 @@ if __name__ == '__main__':
     # chongliuliang(User.get('19884137'),'18217681078')
 
     # 充流量
-    # chongliuliang_liantong(User.get('19988971'),'18521058664')
+    chongliuliang_liantong(User.get('19988971'),'18521058664')
     # chongliuliang_yidong(User.get('19988971'),'18217681078')
-    chongliuliang_yidong(User.get('19988971'),'13554436970')  # 张玲
+    # chongliuliang_yidong(User.get('19988971'),'13554436970')  # 张玲
     #
     # chongliuliang_liantong(User.get('19988971'),'15623474689')# 张玲
+    # chongliuliang_liantong(User.get('19884137'),'15527275655')# 把把
 
