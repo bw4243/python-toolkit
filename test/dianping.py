@@ -105,7 +105,7 @@ def youhuicuxiao(accountId, contractID, beginTime, endTime, productId, shopId, i
     return resp
 
 
-def set_cache(category, params, value):
+def set_cache(category, params, value,beta=True):
     """
     设置缓存值
     :param category:
@@ -116,11 +116,11 @@ def set_cache(category, params, value):
     content = 'url=campaign.service.configService&method=setCache&parameterTypes=java.lang.String&parameters=%s&parameterTypes=[Ljava.lang.Object;&parameters=%s&parameterTypes=java.lang.Object&parameters=%s' % (
         category, str(params), value)
     print(content)
-    resp = http_retry('http://beauty-campaign-service01.beta:4080/invoke.json?' + content)
+    resp = http_retry( 'http://%s:4080/invoke.json?%s' % (['beauty-campaign-service02.nh','beauty-campaign-service01.beta'][beta],content))
     print(resp)
 
 
-def get_cache(category, params):
+def get_cache(category, params,beta=True):
     """
     获取缓存值
     :param category:
@@ -128,14 +128,14 @@ def get_cache(category, params):
     :return:
     """
     content = 'url=campaign.service.configService&method=getCache&parameterTypes=java.lang.String&parameters=%s&parameterTypes=[Ljava.lang.Object;&parameters=%s' % (
-        category, str(params) )
+        category, str(params))
     print(content)
-    resp = http_retry('http://beauty-campaign-service01.beta:4080/invoke.json?' + content)
+    resp = http_retry('http://%s:4080/invoke.json?%s' % (['beauty-campaign-service02.nh','beauty-campaign-service01.beta'][beta],content))
     print(resp)
     return resp
 
 
-def is_new_user(userid, sort_type='site', mobile='', dpid='',beta=False):
+def is_new_user(userid, sort_type='site', mobile='', dpid='', beta=False):
     """
     判断是否是某平台新用户
     :param userid:
@@ -145,15 +145,26 @@ def is_new_user(userid, sort_type='site', mobile='', dpid='',beta=False):
     :return:
     """
 
-    servers=['dpuser-service01.beta','dpuser-service04.nh']
+    servers = ['dpuser-service01.beta', 'dpuser-service04.nh']
 
     content = 'url=http://service.dianping.com/dpdata/dpuser&method=isFirstBuyUser&parameterTypes=java.lang.String&parameters=%s&parameterTypes=java.lang.String&parameters=%s&parameterTypes=java.lang.String&parameters=%s&parameterTypes=java.lang.String&parameters=%s' % (
         userid, sort_type, mobile, dpid)
     print(content)
-    resp = http_retry('http://%s:4080/invoke.json?%s'% (servers[beta], content))
+    resp = http_retry('http://%s:4080/invoke.json?%s' % (servers[beta], content))
     print(resp)
     return resp
 
+
+def fix_youhui_data():
+    obj = json.loads(open('/Users/zhouzhipeng/Documents/contract.txt').read())
+    for item in obj['data']:
+        begin, end = item['duration'].split('-')
+        begin_str = datetime.datetime.strptime(begin, '%Y%m%d%H%M%S').strftime('%Y-%m-%dT%H:%M:%S.000+0800')
+        end_str = datetime.datetime.strptime(end, '%Y%m%d%H%M%S').strftime('%Y-%m-%dT%H:%M:%S.000+0800')
+
+        youhuicuxiao(accountId=item['accountId'], contractID=item['contractID'], beginTime=begin_str, endTime=end_str,
+                     productId=item['productId'],
+                     shopId=item['shopId'], itemId=item['itemId'])
 
 if __name__ == '__main__':
     # send_push('-8458788633886141025', 'dianping://web?sdfsf', 'testtt2')
@@ -167,6 +178,7 @@ if __name__ == '__main__':
     # youhuicuxiao(5122050, 9272877, '2016-03-21T00:00:00.000+0800', '2016-09-20T23:59:59.000+0800', 111563, 45570986,
     #              11255918);
 
+    # youhuicuxiao(863982	,9275800,	'2016-04-08T00:00:00.000+0800','2017-04-07T23:59:59.000+0800'	,111791	,8623436,	11264594);
 
     # get_cache('BeautyFestivalUserGameInfo', [1])
     # set_cache('BeautyFestivalUserGameInfo',[1],'{"id":10012}')
@@ -175,10 +187,26 @@ if __name__ == '__main__':
     # is_new_user('9149','c135',beta=True)
 
 
-    get_cache('BeautyBigsaleParticipant', '["global"]')
+    # get_cache('BeautyBigsaleParticipant', '["global"]')
 
     # set_cache('BeautyBigsaleParticipant', '["global"]',120000)
     # get_cache('BeautyBigsaleParticipant', '["global"]')
 
 
 
+
+    # get_cache('BeautyFestivalUserGameInfo',[859735135],beta=True)
+
+    # set_cache('BeautyFestivalUserGameInfo',[859735135],'null')
+
+    # get_cache('BeautyFestivalUserGameInfo',[122612660],beta=False)
+
+
+    # fix_youhui_data()
+
+    get_cache('BeautyMerchantMenu',[5316709],beta=False)
+
+    # set_cache('BeautyMerchantMenu',[5316709],'null',beta=False)
+
+    # get_cache('testzhou',[1],beta=False)
+    pass
