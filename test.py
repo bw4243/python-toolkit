@@ -6,6 +6,7 @@ import time
 import json
 import urllib
 from myutils import *
+import re
 
 
 #
@@ -129,4 +130,17 @@ def send_push():
 
 # print_cityids()
 
-send_push()
+# send_push()
+
+
+if __name__ == '__main__':
+    # filepath=sys.argv[1]
+    filepath='/Users/zhouzhipeng/code/company_projects/20160420-newcouponservice/beauty-campaign-web'
+    filepath+='/.git/config'
+    content=open(filepath).read()
+    result=re.search('url = git@code\.dianpingoa\.com:([a-zA-Z0-9-]+)/([a-zA-Z0-9-]+)\.git',content)
+    if result:
+        group_name=result.group(1)
+        project_name=result.group(2)
+
+    #open_url(sys.argv[1])

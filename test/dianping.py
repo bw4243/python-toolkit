@@ -202,9 +202,9 @@ if __name__ == '__main__':
     # get_cache('BeautyFestivalUserGameInfo',[122612660],beta=False)
 
 
-    # fix_youhui_data()
+    fix_youhui_data()
 
-    get_cache('BeautyMerchantMenu',[5316709],beta=False)
+    # get_cache('BeautyMerchantMenu',[5316709],beta=False)
 
     # set_cache('BeautyMerchantMenu',[5316709],'null',beta=False)
 
