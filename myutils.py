@@ -208,4 +208,5 @@ if __name__ == '__main__':
     # print(after_seconds(60))
     # print(random_str(40))
     # print(type(logger))
-    logger.info('sdf')
+    # logger.info('sdf')
+    print(md5('penguo1110'))

@@ -21,8 +21,8 @@ def print_cityids():
     for city in list:
         map[city['cityName']] = city['cityID']
     cityids = ''
-    for cityname in u'鞍山 保定 北京 常州 成都 大连 东莞 佛山 福州 抚顺 广州 贵阳 哈尔滨 杭州 合肥 呼和浩特 惠州 济南 嘉兴 昆明 昆山 兰州 临沂 洛阳 南昌 南京 南宁 南通 宁波 青岛 泉州 厦门 上海 绍兴 深圳 沈阳 石家庄 苏州 台州 太原 泰州 唐山 天津 潍坊 温州 无锡 武汉 西安 襄阳 徐州 烟台 扬州 宜昌 义乌 银川 长春 长沙 镇江 郑州 中山 重庆 珠海 淄博'.split(
-            ' '):
+    for cityname in u'大连,哈尔滨,沈阳,北京,天津,上海,西安,合肥,武汉,苏州,无锡,济南,南京,青岛,成都,重庆,郑州,杭州,宁波,长沙,广州,深圳,鞍山,抚顺,长春,呼和浩特,兰州,太原,银川,襄阳,宜昌,常州,昆山,南通,泰州,徐州,扬州,镇江,临沂,潍坊,烟台,淄博,昆明,保定,洛阳,石家庄,福州,厦门,泉州,嘉兴,绍兴,台州,温州,南昌,佛山,东莞,惠州,南宁,中山,珠海'.split(
+            ','):
         cityids += str(map[cityname]) + ','
     #
     print(cityids)
@@ -202,11 +202,17 @@ if __name__ == '__main__':
     # get_cache('BeautyFestivalUserGameInfo',[122612660],beta=False)
 
 
-    fix_youhui_data()
+    # fix_youhui_data()
 
     # get_cache('BeautyMerchantMenu',[5316709],beta=False)
 
     # set_cache('BeautyMerchantMenu',[5316709],'null',beta=False)
 
     # get_cache('testzhou',[1],beta=False)
+
+
+    # print_cityids()
+
+    get_cache('BeautyMerchantFunctionAuthorityDTOList',"[20052388]")
+    # set_cache('BeautyMerchantFunctionAuthorityDTOList',"[20052388]","[]")
     pass
