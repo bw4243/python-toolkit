@@ -168,6 +168,11 @@ if __name__ == '__main__':
     #     group_name=result.group(1)
     #     project_name=result.group(2)
 
-    pma_test()
+    # pma_test()
 
     #open_url(sys.argv[1])
+
+    pass
+
+
+

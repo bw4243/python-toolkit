@@ -105,7 +105,7 @@ def youhuicuxiao(accountId, contractID, beginTime, endTime, productId, shopId, i
     return resp
 
 
-def set_cache(category, params, value,beta=True):
+def set_cache(category, params, value, beta=True):
     """
     设置缓存值
     :param category:
@@ -116,11 +116,12 @@ def set_cache(category, params, value,beta=True):
     content = 'url=campaign.service.configService&method=setCache&parameterTypes=java.lang.String&parameters=%s&parameterTypes=[Ljava.lang.Object;&parameters=%s&parameterTypes=java.lang.Object&parameters=%s' % (
         category, str(params), value)
     print(content)
-    resp = http_retry( 'http://%s:4080/invoke.json?%s' % (['beauty-campaign-service02.nh','beauty-campaign-service01.beta'][beta],content))
+    resp = http_retry('http://%s:4080/invoke.json?%s' % (
+    ['beauty-campaign-service02.nh', 'beauty-campaign-service01.beta'][beta], content))
     print(resp)
 
 
-def get_cache(category, params,beta=True):
+def get_cache(category, params, beta=True):
     """
     获取缓存值
     :param category:
@@ -130,7 +131,8 @@ def get_cache(category, params,beta=True):
     content = 'url=campaign.service.configService&method=getCache&parameterTypes=java.lang.String&parameters=%s&parameterTypes=[Ljava.lang.Object;&parameters=%s' % (
         category, str(params))
     print(content)
-    resp = http_retry('http://%s:4080/invoke.json?%s' % (['beauty-campaign-service02.nh','beauty-campaign-service01.beta'][beta],content))
+    resp = http_retry('http://%s:4080/invoke.json?%s' % (
+    ['beauty-campaign-service02.nh', 'beauty-campaign-service01.beta'][beta], content))
     print(resp)
     return resp
 
@@ -165,6 +167,73 @@ def fix_youhui_data():
         youhuicuxiao(accountId=item['accountId'], contractID=item['contractID'], beginTime=begin_str, endTime=end_str,
                      productId=item['productId'],
                      shopId=item['shopId'], itemId=item['itemId'])
+
+
+def home_pic_data():
+    '''
+    未开通的门店主图的数据获取
+    :return:
+    '''
+
+    #select distinct accountid,customerid from BeautyContractItem  as A where A.status=1 and A.accountid!=0 and  A.shopid not in (select distinct shopid from HomePagePic);
+    # obj = json.loads(open('/Users/zhouzhipeng/Documents/data.json').read())
+
+    obj = json.loads(open('/Users/zhouzhipeng/Documents/data_whole.json').read())
+
+
+    normal_accounts = []
+    admin_accounts = []
+
+    whole_str=''
+
+    for item in obj['data']:
+
+        try:
+
+            accountid = str(item['accountid'])
+            customerid = str(item['customerid'])
+
+            print(item)
+
+            # 1.判断是否管理员
+            resp = http_retry(
+                'http://merchant-member-rpc-service01.nh:4080/invoke.json?validate=false&direct=false&token=&parameters%5B%5D=' + accountid + '&url=http%3A%2F%2Fservice.dianping.com%2FmerchantService%2FuserAuthoriseService_1.0.0&method=loadAccountDetailInfo&parameterTypes%5B%5D=int')
+
+            is_admin=False
+
+            if resp:
+                is_admin = json.loads(resp)['userAdmin']
+
+            whole_str+=accountid+'\t'+str(item['shopid'])+'\t'+str(is_admin)+'\n'
+
+            if not is_admin:
+                normal_accounts.append(str(accountid))
+
+
+                # 查询管理员账号
+                resp = http_retry(
+                    'http://merchant-member-rpc-service01.nh:4080/invoke.json?validate=false&direct=false&token=&parameters%5B%5D=[' + customerid + ']&url=http%3A%2F%2Fservice.dianping.com%2FmerchantService%2FuserAuthoriseService_1.0.0&method=getAdminIdsByCustomerIds&parameterTypes%5B%5D=java.util.List')
+
+                ret=json.loads(resp)
+                if str(customerid) in ret:
+                    admin_account_id = ret[str(customerid)]
+                    admin_accounts.append(str(admin_account_id))
+
+                    whole_str+=str(admin_account_id)+'\t'+str(item['shopid'])+'\t'+str(True)+'\n'
+
+            else:
+                admin_accounts.append(str(accountid))
+
+        except:
+            print("error=====")
+            print(item)
+    # print(set(admin_accounts))
+    # print(set(normal_accounts))
+
+    open('/Users/zhouzhipeng/Documents/admin_accounts.txt','w').write('\n'.join(set(admin_accounts)))
+    open('/Users/zhouzhipeng/Documents/normal_accounts.txt','w').write('\n'.join(set(normal_accounts)))
+    open('/Users/zhouzhipeng/Documents/whole_data.txt','w').write(whole_str)
+
 
 if __name__ == '__main__':
     # send_push('-8458788633886141025', 'dianping://web?sdfsf', 'testtt2')
@@ -213,6 +282,9 @@ if __name__ == '__main__':
 
     # print_cityids()
 
-    get_cache('BeautyMerchantFunctionAuthorityDTOList',"[20052388]")
+    # get_cache('BeautyMerchantFunctionAuthorityDTOList', "[20052388]")
     # set_cache('BeautyMerchantFunctionAuthorityDTOList',"[20052388]","[]")
+
+    home_pic_data()
+
     pass
