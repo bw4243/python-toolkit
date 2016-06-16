@@ -8,6 +8,7 @@ from sgmllib import SGMLParser
 import urllib
 from xml.etree import ElementTree
 import os
+from myutils import *
 
 
 def __login():
@@ -65,7 +66,7 @@ def __login():
     # 准备登陆
     body = {
         "username": "823143047@qq.com",
-        "password": "penguo1110",
+        "password": "********",
         "login": "登陆",
         "hpts": hpts,
         "hptsh": hptsh,
@@ -300,11 +301,61 @@ def __uploadFile(filepath):
         return attachId
 
 
-__session_cookie = __login()
+# ++++new methods start++++
+
+headers = """
+        Host: app.yinxiang.com
+        Connection: keep-alive
+        X-EN-Webclient-Version: WEB2.0
+        Origin: https://app.yinxiang.com
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.84 Safari/537.36
+        Content-Type: text/x-gwt-rpc; charset=UTF-8
+        X-GWT-Module-Base: https://app.yinxiang.com/focusclient/
+        X-GWT-Permutation: 39F40155C3B63A126F7872BD3FB593F8
+        Accept: */*
+        Referer: https://app.yinxiang.com/Home.action
+        Accept-Language: zh-CN,zh;q=0.8,en;q=0.6
+        Cookie: referral=mktg_hp; __utma=24507826.1618979945.1465614843.1465615202.1465615202.1; __utmz=24507826.1465615202.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); cookieTestValue=1465697584654; rem_user="823143047@qq.com"; auth="S=s60:U=c44607:E=155dce10f56:C=15542624757:P=5fd:A=en-web:V=2:H=afe58b3f57eb37f48b2fe7c8258a1d18"; lastAuthentication=1465697584984/ebb342d30edf3abd7e749404f28c3d4a; JSESSIONID=9ECC8A1A80D69273636DD75B5E0199DD; req_sec="U=c44607:P=/:E=1554a1b3d0a:S=aa964b9b75c86499e5ba54c48115a8b6"; _gat=1; _ga=GA1.2.1618979945.1465614843; userdata_loggedIn=true; userdata_lastLoginTime=1465826600407; userdata_accountType=BASIC; userdata_acctCreatedTime=1445175234000; userdata_USN=3253
+        """
+
+
+def find_note_counts():
+    """
+    查询笔记本笔记条数
+    :return:
+    """
+
+    content = '7|0|7|https://app.yinxiang.com/focusclient/|7A6B7E6787B04DFC13A909170DAC8C96|com.evernote.web.shared.GWTNoteStoreInterface|findNoteCounts|com.evernote.edam.notestore.NoteFilter/1408550393|Z|[Z/1413617015|1|2|3|4|2|5|6|5|7|4|0|0|0|0|0|0|0|0|0|0|0|0|0|1|'
+
+    resp = http_retry('https://app.yinxiang.com/shard/s60/enweb/notestore', method='POST', body=content,
+                      headers=headers_from_str(headers))
+
+    print(resp)
+
+
+def get_note_with_result_spec():
+    """
+    查询笔记本笔记条数
+    :return:
+    """
+
+    content = '7|0|8|https://app.yinxiang.com/focusclient/|7A6B7E6787B04DFC13A909170DAC8C96|com.evernote.web.shared.GWTNoteStoreInterface|getNoteWithResultSpec|java.lang.String/2004016611|com.evernote.edam.notestore.NoteResultSpec/3324952227|55e3cbdf-08b7-4d4f-a382-6d8390fbf5a5|[Z/1413617015|1|2|3|4|2|5|6|7|6|8|8|1|1|1|1|1|0|0|0|0|1|0|0|0|0|0|1|'
+
+    resp = http_retry('https://app.yinxiang.com/shard/s60/enweb/notestore', method='POST', body=content,
+                      headers=headers_from_str(headers))
+
+    print(resp)
+
+
+# ----new methods end----
+
+# __session_cookie = __login()
 
 # test
 if __name__ == '__main__':
     # createFileNote('图片笔记66666', '/Users/zhouzhipeng/Downloads/season_img_bigbanner_1_3.jpg')
 
-    createPlainNote("test",
-                    '<div><br><img src="https://app.yinxiang.com/shard/s60/res/8b8cdff8-b0aa-4bd6-be9e-1d5bb036e0ce/season_img_bigbanner_1_1.jpg" alt="" name="8b8cdff8-b0aa-4bd6-be9e-1d5bb036e0ce" class="en-media" data-mce-src="https://app.yinxiang.com/shard/s60/res/8b8cdff8-b0aa-4bd6-be9e-1d5bb036e0ce/season_img_bigbanner_1_1.jpg"></div>')
+    # createPlainNote("test",
+    #                 '<div><br><img src="https://app.yinxiang.com/shard/s60/res/8b8cdff8-b0aa-4bd6-be9e-1d5bb036e0ce/season_img_bigbanner_1_1.jpg" alt="" name="8b8cdff8-b0aa-4bd6-be9e-1d5bb036e0ce" class="en-media" data-mce-src="https://app.yinxiang.com/shard/s60/res/8b8cdff8-b0aa-4bd6-be9e-1d5bb036e0ce/season_img_bigbanner_1_1.jpg"></div>')
+
+    find_note_counts()
