@@ -196,6 +196,39 @@ def test():
         print(metadata.title)
 
 
+def find_shop_infos_extra():
+
+
+    """
+    查询店铺信息通过accountid
+    :return:
+    """
+    result = ''
+    obj = open('/Users/zhouzhipeng/Downloads/old_accountids.txt').read().split('\r')
+    first_line=True
+    for row in obj:
+        if first_line:
+            first_line=False
+            continue
+
+        if row.strip()=='':
+            continue
+
+        account_id,shopid,shopname=row.split('\t')
+        # shopname=shopname.strip().decode('gbk', 'utf-8')
+        resp = http_retry(
+            'http://shop-server28.nh:4080/invoke.json?validate=false&direct=false&token=&parameters%5B%5D=' + str(
+                shopid) + '&url=http%3A%2F%2Fservice.dianping.com%2FshopService%2FshopService_2.0.0&method=loadShop&parameterTypes%5B%5D=int')
+
+        resp=json.loads(resp)
+        shopname = resp['shopName'].encode('utf-8')
+        shoptype= resp['shopType'] ==50
+        result = str(account_id) + '\t' + str(shopid) + '\t' + shopname + '\t'+str(shoptype)+'\r'
+
+        open('/Users/zhouzhipeng/Downloads/results2.txt', 'a').write(result)
+
+
+
 
 if __name__ == '__main__':
     # # filepath=sys.argv[1]
@@ -211,7 +244,12 @@ if __name__ == '__main__':
 
     #open_url(sys.argv[1])
 
-    test()
+
+    import sys
+    reload(sys)
+    sys.setdefaultencoding("utf-8")
+    # test()
+    find_shop_infos_extra()
 
     pass
 

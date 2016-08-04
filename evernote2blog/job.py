@@ -3,6 +3,7 @@
 from evernote.api.client import EvernoteClient
 from evernote.edam.notestore.ttypes import *
 from evernote.edam.type.ttypes import NoteSortOrder
+from xml.etree import ElementTree
 
 
 def syn_note2blog():
@@ -14,7 +15,7 @@ def syn_note2blog():
 
     latestUpdateCount = 0
     currentState = note_store.getSyncState(developer_token)
-    currentUpdateCount = currentState.getUpdateCount()
+    currentUpdateCount = currentState.updateCount
 
     if currentUpdateCount > latestUpdateCount:
         # TODO:get the latest notes
@@ -27,20 +28,19 @@ def syn_note2blog():
 
         print('博客 guid', guid)
 
-        # note = Note()
-        # note.title = "I'm a test note!"
-        # note.content = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'
-        # note.content += '<en-note>Hello, world!</en-note>'
-        # note = note_store.createNote(note)
-
-        # note_store.getNote()
-
         metadatalist = note_store.findNotesMetadata(developer_token,
                                                     NoteFilter(order=NoteSortOrder.CREATED, notebookGuid=guid,
                                                                ascending=False), 0, 10,
                                                     NotesMetadataResultSpec(includeTitle=True))
         for metadata in metadatalist.notes:
             print(metadata.title)
+            note_content=note_store.getNoteContent(developer_token,metadata.guid)
+            print(note_content)
+            root = ElementTree.fromstring(note_content)
+            print(root)
+
+
+
 
 
 if __name__ == '__main__':
