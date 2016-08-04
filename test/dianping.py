@@ -158,6 +158,10 @@ def is_new_user(userid, sort_type='site', mobile='', dpid='', beta=False):
 
 
 def fix_youhui_data():
+    """
+    批量补优惠促销配置数据
+    :return:
+    """
     obj = json.loads(open('/Users/zhouzhipeng/Documents/contract.txt').read())
     for item in obj['data']:
         begin, end = item['duration'].split('-')
