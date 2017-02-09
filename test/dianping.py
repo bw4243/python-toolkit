@@ -268,6 +268,30 @@ def find_shop_infos():
                 print("error:" + account_id)
 
 
+
+
+def find_account_infos():
+    """
+    通过门店信息查询账户
+    :return:
+    """
+
+    obj = open('/Users/zhouzhipeng/Downloads/shopids.txt').read().split('\n')
+    for shopid in obj:
+        resp = http_retry(
+            'http://merchant-member-rpc-service01.nh:4080/invoke.json?validate=false&direct=false&token=undefined&parameters%5B%5D=' + str(
+                shopid) + '&url=http%3A%2F%2Fservice.dianping.com%2FmerchantService%2FuserAuthoriseService_1.0.0&method=fetchAllShopAccountIdByShopId&parameterTypes%5B%5D=int')
+        accountids = json.loads(resp)
+        result = ''
+        for accountid in accountids:
+            result+=str(accountid)+"\n"
+
+        try:
+            open('/Users/zhouzhipeng/Downloads/accountids_results.txt', 'a').write(result)
+        except:
+            print("error:" + shopid)
+
+
 def load_misc_data():
     """
     商户通场景化push 历史数据清洗
@@ -659,4 +683,5 @@ if __name__ == '__main__':
     #优惠促销手动补数据
     # youhuicuxiao(3662138,9275726,'2016-07-01T00:00:00.000+0800','2016-12-31T23:59:59.000+0800',111790,57086239,11264420)
     # load_test()
+    find_account_infos()
     pass
