@@ -7,7 +7,7 @@ import pyperclip
 
 def login():
     resp = http_retry(
-        'http://api.shjmpt.com:9002/pubApi/uLogin?uName=penkie&pWord=penguo1110&Developer=ojF%2f6Xe%2blVBjWugligpxDQ%3d%3d')
+        'http://api.shjmpt.com:9002/pubApi/uLogin?uName=penkie&pWord=$PASSWD&Developer=ojF%2f6Xe%2blVBjWugligpxDQ%3d%3d')
     print(resp)
 
     return resp.split('&')[0]
