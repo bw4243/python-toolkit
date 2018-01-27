@@ -209,4 +209,3 @@ if __name__ == '__main__':
     # print(random_str(40))
     # print(type(logger))
     # logger.info('sdf')
-    print(md5('penguo1110'))
