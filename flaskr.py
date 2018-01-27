@@ -7,8 +7,8 @@ from flask import Flask, request, session, g, redirect, url_for, \
 DATABASE = 'flaskr.db'
 DEBUG = True
 SECRET_KEY = "ABC"
-USERNAME = 'admin'
-PASSWORD = '123456'
+USERNAME = $USER
+PASSWORD = $PASSWORD
 
 # create out little application :)
 app = Flask(__name__)
